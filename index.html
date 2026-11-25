@@ -91,6 +91,8 @@
       transition: color var(--transition);
     }
     nav a:hover { color: var(--gold-light); }
+    nav .mobile-owner { display: none; }
+    @media (max-width: 768px) { nav.open .mobile-owner { display: inline-flex; } }
 
     .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
     .btn {
@@ -708,6 +710,7 @@
         <a href="#about">Capabilities</a>
         <a href="#catalogs-pdf">Downloads</a>
         <a href="#contact">Contact</a>
+        <button type="button" class="btn btn-outline mobile-owner" onclick="openAdmin()">Owner Backend</button>
       </nav>
       <div class="nav-actions">
         <button class="btn btn-outline" onclick="openAdmin()">Owner Backend</button>
@@ -1176,8 +1179,11 @@ menuBtn.addEventListener("click", () => {
   menuBtn.setAttribute("aria-expanded", isOpen);
 });
 
-navEl.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => navEl.classList.remove("open"));
+navEl.querySelectorAll("a, .mobile-owner").forEach(link => {
+  link.addEventListener("click", () => {
+    navEl.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded", "false");
+  });
 });
 
 
