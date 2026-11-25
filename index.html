@@ -675,6 +675,24 @@
   .reveal { opacity: 1; transform: none; transition: none; }
 }
 
+
+    .offer-slider { position:relative; }
+    .offer-track { display:grid; min-height:0; touch-action:pan-y; cursor:grab; }
+    .offer-track.dragging { cursor:grabbing; user-select:none; }
+    .offer-slide { position:relative; inset:auto; grid-area:1/1; grid-template-columns:minmax(0,1fr) minmax(0,1fr); min-height:340px; }
+    .offer-img { height:340px; min-width:0; object-fit:contain; align-self:center; background:#fff; }
+    .offer-body { min-width:0; overflow-wrap:anywhere; padding:2rem; }
+    .offer-controls { display:flex; justify-content:center; align-items:center; gap:1rem; margin-top:12px; }
+    .offer-controls[hidden] { display:none; }
+    .offer-controls button { cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:50%; width:42px; height:42px; font-size:24px; }
+    .offer-controls .offer-dots { margin:0; }
+    .offer-controls .offer-dot { width:12px; height:12px; padding:0; background:var(--border); }
+    .offer-controls .offer-dot.active { background:var(--gold); }
+    .card-img { object-fit:contain; background:#fff; }
+    .card-image-missing[hidden], .card-img[hidden] { display:none; }
+    .card-image-missing { display:grid; place-items:center; aspect-ratio:4/3; background:var(--surface-2); border-radius:12px; color:var(--muted); text-align:center; padding:1rem; }
+    @media(max-width:768px) { .offer-slide { grid-template-columns:minmax(0,1fr); grid-template-rows:auto 1fr; min-height:0; } .offer-img { height:220px; } .offer-body { padding:1.25rem; } }
+
 </style>
 
 
@@ -728,7 +746,7 @@
       </div>
       <div class="offer-slider" id="offerSlider">
         <div class="offer-track" id="offerTrack"></div>
-        <div class="offer-dots" id="offerDots"></div>
+        <div class="offer-controls" id="offerControls" hidden><button type="button" id="offerPrev" aria-label="Previous offer">&#8249;</button><div class="offer-dots" id="offerDots"></div><button type="button" id="offerNext" aria-label="Next offer">&#8250;</button></div>
       </div>
     </section>
 
@@ -975,7 +993,7 @@
         <div class="card">
           <div>
                           
-        ${p.image ? `<img class="card-img" src="${safeUrl(p.image,true)}" alt="${esc(p.name)}" loading="lazy">` : ""}
+        ${p.image && safeUrl(p.image,true) ? `<img class="card-img" src="${safeUrl(p.image,true)}" alt="${esc(p.name)}" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"> <div class="card-image-missing" hidden>Product image unavailable</div>` : `<div class="card-image-missing">Product image unavailable</div>`}
 
             <div class="card-top">
               <span class="pill">${esc(p.category)}</span>
@@ -1188,7 +1206,7 @@ navEl.querySelectorAll("a").forEach(link => {
 
       document.getElementById("offerTrack").innerHTML = active.map((o, i) => `
         <article class="offer-slide ${i === 0 ? "active" : ""} ${o.image_url ? "" : "no-img"}">
-          ${o.image_url ? `<img class="offer-img" src="${safeUrl(o.image_url)}" alt="${esc(o.title)}">` : ""}
+          ${o.image_url ? `<img class="offer-img" src="${safeUrl(o.image_url)}" alt="${esc(o.title)}" draggable="false">` : ""}
           <div class="offer-body">
             ${o.badge ? `<span class="offer-badge">${esc(o.badge)}</span>` : ""}
             <h3>${esc(o.title)}</h3>
@@ -1210,12 +1228,16 @@ navEl.querySelectorAll("a").forEach(link => {
       const slides = document.querySelectorAll(".offer-slide");
       const dotEls = document.querySelectorAll(".offer-dot");
       let current = 0, timer;
+      const controls=$('offerControls'), track=$('offerTrack');
+      controls.hidden=slides.length<2;
+      const controller=new AbortController(), opts={signal:controller.signal};
+      slides.forEach((slide,i)=>{slide.inert=i!==0;});
 
       function show(n) {
-        slides[current].classList.remove("active");
+        slides[current].classList.remove("active"); slides[current].inert=true;
         dotEls[current]?.classList.remove("active");
         current = (n + slides.length) % slides.length;
-        slides[current].classList.add("active");
+        slides[current].classList.add("active"); slides[current].inert=false;
         dotEls[current]?.classList.add("active");
       }
       function start() {
@@ -1226,7 +1248,16 @@ navEl.querySelectorAll("a").forEach(link => {
 
       dotEls.forEach(d => d.addEventListener("click", () => { stop(); show(+d.dataset.i); start(); }));
       const slider = document.getElementById("offerSlider");
-      slider.onmouseenter=stop; slider.onmouseleave=start; stopOffers=()=>{stop();slider.onmouseenter=null;slider.onmouseleave=null;};
+      function move(delta){stop();show(current+delta);start();}
+      $('offerPrev').addEventListener('click',()=>move(-1),opts);
+      $('offerNext').addEventListener('click',()=>move(1),opts);
+      let gesture=null, suppress=false;
+      track.addEventListener('pointerdown',e=>{if(slides.length<2||!e.isPrimary||e.button!==0||e.target.closest('button,a,input'))return;gesture={id:e.pointerId,x:e.clientX,y:e.clientY};stop();track.classList.add('dragging');track.setPointerCapture(e.pointerId);},opts);
+      track.addEventListener('pointerup',e=>{if(!gesture||gesture.id!==e.pointerId)return;const dx=e.clientX-gesture.x,dy=e.clientY-gesture.y;gesture=null;track.classList.remove('dragging');if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)){suppress=true;move(dx<0?1:-1);setTimeout(()=>suppress=false,400);}else start();},opts);
+      track.addEventListener('pointercancel',()=>{gesture=null;track.classList.remove('dragging');start();},opts);
+      track.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopPropagation();suppress=false;}},{capture:true,signal:controller.signal});
+      slider.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();move(e.key==='ArrowLeft'?-1:1);}},opts);
+      slider.onmouseenter=stop; slider.onmouseleave=start; stopOffers=()=>{stop();controller.abort();track.classList.remove('dragging');slider.onmouseenter=null;slider.onmouseleave=null;};
       start();
     }
 
