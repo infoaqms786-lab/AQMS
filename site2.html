@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>AQMS | B2B Disposable Food Packaging Manufacturer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #f5f7fa;          /* pale ice blue */
+      --surface: #ffffff;     /* white */
+      --surface-2: #eef2f7;   /* light mist grey */
+      --border: #dbe2ec;      /* soft silver-blue */
+      --gold: #c8932f;        /* warm amber gold */
+      --gold-light: #8a6212;  /* dark bronze */
+      --text: #1b2a3d;        /* deep navy */
+      --muted: #5a6b80;       /* slate grey */
+      --radius: 16px;
+      --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    html { 
+      scroll-behavior: smooth; 
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    
+                                                         /* Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(245, 247, 250, 0.9);  /* pale ice blue, slightly see-through */
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+                                                      /*BRAND NAME STYLE*/
+
+
+    .brand {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--gold-light);
+      text-decoration: none;
+    }
+    .brand span { 
+      color: var(--text);
+      font-weight: 500; 
+    }
+    
+    nav { 
+      display: flex; 
+      align-items: center; 
+      gap: 1.5rem; 
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      transition: color var(--transition);
+    }
+    nav a:hover { color: var(--gold-light); }
+
+    .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+      text-decoration: none;
+    }
+    .btn-gold {
+      background: var(--gold);  /* warm amber gold */
+      color: #1b1405;           /* very dark brown */
+      box-shadow: none;
+    }
+    .btn-gold:hover { 
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(200, 147, 47, 0.3);  /* soft amber shadow */ 
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); }
+
+    .badge {
+      background: #14263d;  /* dark navy */
+      color: #ffffff;       /* white */
+      font-size: 0.75rem;
+      padding: 0.1rem 0.48rem;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+                                                /* Sections */
+
+
+
+    main { position: relative; z-index: 1; }
+    section { max-width: 1240px; margin: 0 auto; padding: 5.5rem 1.5rem; }
+
+                                                /* Hero */
+
+
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 7rem;
+      position: relative;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: fit-content;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(212, 175, 55, 0.08);
+      color: var(--gold-light);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.4rem, 5.5vw, 4.4rem);
+      line-height: 1.12;
+      max-width: 880px;
+      margin-bottom: 1.25rem;
+      color: var(--text);  /* deep navy */
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.08rem;
+      max-width: 650px;
+      margin-bottom: 2.2rem;
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 3.5rem; }
+
+
+
+
+                                                    /* Stats */
+
+
+
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+    .stat-card {
+      background: var(--surface);  /* white */
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .stat-num {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+    .stat-label { color: var(--muted); font-size: 0.88rem; margin-top: 0.25rem; }
+
+
+
+                                                /* Section Headings */
+
+
+
+    .sec-head { margin-bottom: 2.5rem; }
+    .sec-head small {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 600;
+    }
+    .sec-head h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+      margin-top: 0.35rem;
+    }
+
+
+
+                                                  /* Filter Bar */
+    
+
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .tab.active, .tab:hover {
+      background: rgba(212, 175, 55, 0.16);
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+    .search-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 1rem;
+      border-radius: 999px;
+      min-width: 240px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--gold); }
+
+
+
+                                                    /* Product Grid */
+
+
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+      box-shadow: 0 10px 24px rgba(20, 38, 61, 0.12);  /* soft navy shadow */
+    }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; }
+    .pill {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold-light);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    .card h3 { 
+      font-size: 1.18rem; 
+      margin-top: 0.5rem; 
+    }
+
+    .card p { 
+      color: var(--muted); 
+      font-size: 0.9rem; 
+    }
+
+                                       /*CARD IMAGE*/
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 12px;
+      background: var(--surface-2);  /* light mist grey, shows while loading */
+    }                                  
+
+    .meta-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      list-style: none;
+    }
+
+    .meta-list li {
+      font-size: 0.76rem;
+      background: var(--surface-2);
+      color: var(--text);  /* deep navy */
+      padding: 0.22rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    .card-actions { 
+      display: flex; 
+      gap: 0.6rem; 
+      margin-top: 0.5rem; 
+    }
+
+    .card-actions .btn { 
+      flex: 1; 
+      padding: 0.55rem 0.8rem; 
+      font-size: 0.82rem; 
+    }
+
+
+                                           /* Materials & Offices */
+    
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .info-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+    .info-box h3 { 
+      font-family: 'Cinzel', serif; 
+      color: var(--gold-light); 
+      margin-bottom: 0.8rem; 
+    }
+
+    .chips { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 0.5rem; 
+      margin-top: 0.75rem; 
+    }
+
+    .chip {
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+
+
+
+                                            /* Modals & Drawers */
+ 
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 38, 61, 0.55);  /* see-through navy */
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    
+    .overlay.open { 
+      display: flex; 
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 820px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 1.75rem;
+      position: relative;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .close-btn:hover { 
+      color: var(--gold-light); 
+    }
+
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      font-size: 0.85rem; 
+      margin-top: 0.75rem; 
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);  /* soft silver-blue */
+    }
+    th { 
+      color: var(--gold-light); 
+      font-weight: 600; 
+      background: var(--surface-2); 
+    }
+
+    
+
+                                                   /* Forms */
+
+
+    .form-grid { 
+      display: grid; 
+      gap: 0.9rem; 
+      margin-top: 1rem; 
+    }
+
+    .form-row { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 0.9rem; 
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    textarea { min-height: 85px; resize: vertical; }
+
+
+
+                                                /* Scroll Reveal*/
+
+
+
+    .reveal { 
+      opacity: 0; 
+      transform: translateY(28px); 
+      transition: opacity 0.75s ease, transform 0.75s ease; 
+    }
+
+    .reveal.visible { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer a { 
+      color: var(--gold-light); 
+      text-decoration: none; 
+    }
+
+    .menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.3rem;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+                                                            /* OFFERS */
+    .offer-track {
+      position: relative;
+      min-height: 340px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .offer-slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease, visibility 1s;
+    }
+    .offer-slide.no-img { grid-template-columns: 1fr; }
+    .offer-slide.active { opacity: 1; visibility: visible; }
+    .offer-img { width: 100%; height: 100%; object-fit: cover; background: var(--surface-2); }
+    .offer-body {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .offer-badge {
+      width: fit-content;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: #c0392b;   /* brick red */
+      color: #ffffff;
+    }
+
+    .offer-body h3 { 
+      font-family: 'Cinzel', serif; 
+      font-size: clamp(1.4rem, 2.6vw, 2rem); 
+    }
+
+    .offer-body p { 
+      color: var(--muted); 
+    }
+
+    .offer-ends { 
+      font-size: 0.85rem; 
+      color: var(--gold-light); 
+      font-weight: 600; 
+    }
+
+    .offer-dots { 
+      display: flex; 
+      justify-content: center; 
+      gap: 0.5rem; 
+      margin-top: 1rem; 
+    }
+
+    .offer-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: var(--border);
+      cursor: pointer;
+    }
+
+    .offer-dot.active { 
+      background: var(--gold); 
+    }
+
+    @media (max-width: 768px) {
+      .offer-track { 
+        min-height: 480px; 
+      }
+
+      .offer-slide { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: 200px 1fr; 
+      }
+
+      .offer-slide.no-img { 
+        grid-template-rows: 1fr; 
+      }
+
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .offer-slide { 
+        transition: none; 
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-btn { 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+    }
+
+    nav { 
+      display: none; 
+    }
+
+    nav.open {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+    nav.open a {
+     font-size: 1.05rem; color: var(--text); 
+   }
+    
+    .nav-actions .btn-outline { 
+      display: none; 
+    }
+    
+    .form-row { 
+      grid-template-columns: 1fr; 
+    }
+  }
+
+  body { font-size: 1.0625rem; line-height: 1.65; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+</style>
+
+
+</head>
+<body>
+  
+                                                   <!--HEADER--> 
+  <header>
+    <div class="nav-wrap">
+      <a href="#" class="brand">AQ<span>MS</span></a>
+      <nav>
+        <a href="#catalog">Products</a>
+        <a href="#about">Capabilities</a>
+        <a href="#catalogs-pdf">Downloads</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-outline" onclick="openAdmin()">Owner Backend</button>
+        <button class="btn btn-gold" onclick="openTray()">
+          Inquiry Tray <span class="badge" id="trayCount">0</span>
+        </button>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button>
+
+      </div>
+    </div>
+  </header>
+                                                   <!--     MAIN     -->
+  <main>
+                                                     <!-- Hero -->
+    <section class="hero">
+      <div class="hero-tag">Global B2B Packaging Manufacturer • Inquiry Only</div>
+      <h1>Precision Disposable Packaging Built for Global Scale.</h1>
+      <p>
+        In-house mold design, in-house material extrusion, and over 20 years of manufacturing excellence.
+        Browse our complete bulk catalog and send product inquiries directly to our commercial desk.
+      </p>
+      <div class="hero-cta">
+        <a href="#catalog" class="btn btn-gold">Explore Product Catalog</a>
+        <button class="btn btn-outline" onclick="openTray()">Request Bulk Quote</button>
+      </div>
+
+      <div class="stats-grid reveal">
+        <div class="stat-card">
+          <div class="stat-num" data-target="5">0</div>
+          <div class="stat-label">Manufacturing Facilities</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-target="45000">0</div>
+          <div class="stat-label">Sq. Meters Production Area</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-target="220">0</div>
+          <div class="stat-label">Technical Personnel</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-target="20">0</div>
+          <div class="stat-label">Years Industry Experience</div>
+        </div>
+      </div>
+    </section>
+
+                                                         <!-- Offers -->
+    <section id="offers" hidden>
+      <div class="sec-head reveal">
+        <small>Latest Updates</small>
+        <h2>Offers &amp; Announcements</h2>
+      </div>
+      <div class="offer-slider" id="offerSlider">
+        <div class="offer-track" id="offerTrack"></div>
+        <div class="offer-dots" id="offerDots"></div>
+      </div>
+    </section>
+
+                                                            <!-- Catalog -->
+    <section id="catalog">
+      <div class="sec-head reveal">
+        <small>Product Portfolio</small>
+        <h2>B2B Packaging Catalog</h2>
+      </div>
+
+      <div class="controls reveal">
+        <div class="tabs" id="categoryTabs"></div>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search product or SKU (e.g. PT9016, SC200)..." />
+      </div>
+
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+                                                     <!-- Capabilities & Materials -->
+    <section id="about">
+      <div class="sec-head reveal">
+        <small>Manufacturing Edge</small>
+        <h2>Why Partner With AQMS</h2>
+      </div>
+      <div class="info-grid reveal">
+        <div class="info-box">
+          <h3>Core Advantages</h3>
+          <p style="color: var(--muted); font-size: 0.92rem;">
+            • Molds designed and engineered in-house<br />
+            • Raw sheet & material produced in-house<br />
+            • Over 20 years of manufacturing & administration experience<br />
+            • Highly competitive bulk container pricing
+          </p>
+        </div>
+        <div class="info-box">
+          <h3>Supported Materials</h3>
+          <div class="chips">
+            <span class="chip">PP</span><span class="chip">PET / PETE</span>
+            <span class="chip">RPET</span><span class="chip">CPET</span>
+            <span class="chip">PLA</span><span class="chip">PS</span>
+            <span class="chip">OPS</span><span class="chip">PVC</span>
+          </div>
+        </div>
+        <div class="info-box">
+          <h3>Commercial Offices</h3>
+          <p style="color: var(--muted); font-size: 0.92rem;">
+            Strategically positioned to serve food service and retail distributors worldwide:
+          </p>
+          <div class="chips">
+            <span class="chip">Kuwait</span><span class="chip">UAE</span>
+            <span class="chip">Oman</span><span class="chip">India</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Downloadable Catalogs -->
+    <section id="catalogs-pdf">
+      <div class="sec-head reveal">
+        <small>Resources</small>
+        <h2>Downloadable Catalogs</h2>
+      </div>
+      <div class="grid reveal" id="pdfGrid"></div>
+    </section>
+
+                                                              <!-- Contact -->
+
+
+    <section id="contact">
+      <div class="info-box reveal" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1.5rem;">
+        <div>
+          <small style="color:var(--gold); text-transform:uppercase; letter-spacing:0.12em;">Direct Commercial Desk</small>
+          <h2 style="font-family:'Cinzel',serif; margin:0.35rem 0;">Contact AQMS </h2>
+          <p style="color:var(--muted);">
+            Phone / WhatsApp: <strong style="color:var(--text);">+91 96641 43828</strong> &nbsp;|&nbsp;
+            Email: <strong style="color:var(--text);">infoaqms786@gmail.com</strong> &nbsp;|&nbsp;
+            Web: <strong style="color:var(--text);">www.AQMS.com</strong>
+          </p>
+        </div>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <a class="btn btn-gold" href="https://wa.me/919664143828" target="_blank">WhatsApp Direct</a>
+          <a class="btn btn-outline" href="mailto:infoaqms786@gmail.com">Email Desk</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; <span id="year"></span> AQMS — All Rights Reserved. |
+    <a href="https://www.AQMS.com" target="_blank">www.AQMS.com</a>
+  </footer>
+
+  <!-- SKU Details Modal -->
+  <div class="overlay" id="skuModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <span class="pill" id="modalCat"></span>
+          <h3 id="modalTitle" style="margin-top:0.35rem; font-family:'Cinzel',serif;"></h3>
+        </div>
+        <button class="close-btn" onclick="closeModal('skuModal')">&times;</button>
+      </div>
+      <p id="modalDesc" style="color:var(--muted); margin-bottom:1rem;"></p>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Item No.</th>
+              <th>Size / Variant</th>
+              <th>Material</th>
+              <th>Spec</th>
+              <th>Case Qty</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="modalTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inquiry Tray Modal -->
+  <div class="overlay" id="trayModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 style="font-family:'Cinzel',serif; color:var(--gold-light);">Bulk Inquiry Request</h3>
+        <button class="close-btn" onclick="closeModal('trayModal')">&times;</button>
+      </div>
+
+      <div id="trayItems" style="margin-bottom:1.25rem;"></div>
+
+      <form class="form-grid" id="inquiryForm">
+        <div class="form-row">
+          <input type="text" id="inqName" placeholder="Your Full Name *" required />
+          <input type="text" id="inqCompany" placeholder="Company / Distributor Name *" required />
+        </div>
+        <div class="form-row">
+          <input type="email" id="inqEmail" placeholder="Business Email *" required />
+          <input type="tel" id="inqPhone" placeholder="Phone / WhatsApp Number *" required />
+        </div>
+        <textarea id="inqNotes" placeholder="Destination port, estimated container quantity, or custom printing requirements..."></textarea>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <button type="submit" class="btn btn-gold" style="flex:1;">Log &amp; Notify Owner via WhatsApp</button>
+          <button type="button" class="btn btn-outline" onclick="submitEmailInquiry()">Send via Email</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Owner Backend Modal -->
+  <div class="overlay" id="adminModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 style="font-family:'Cinzel',serif; color:var(--gold-light);">Owner Backend Portal</h3>
+        <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
+      </div>
+
+      <div id="adminLogin">
+        <p style="color:var(--muted); margin-bottom:1rem;">Enter owner passcode to manage products, catalogs, and incoming inquiries (Default: <code>admin123</code>).</p>
+        <div style="display:flex; gap:0.75rem;">
+          <input type="password" id="adminPass" placeholder="Passcode" />
+          <button class="btn btn-gold" onclick="loginAdmin()">Unlock</button>
+        </div>
+      </div>
+
+      <div id="adminPanel" style="display:none;">
+        <div class="tabs" style="margin-bottom:1.25rem;">
+          <button class="tab active" onclick="switchAdminTab('inqTab', this)">Inquiries</button>
+          <button class="tab" onclick="switchAdminTab('addProdTab', this)">+ Add Product</button>
+          <button class="tab" onclick="switchAdminTab('addPdfTab', this)">+ Add PDF Catalog</button>
+        </div>
+
+        <div id="inqTab"></div>
+
+        <form id="addProdTab" class="form-grid" style="display:none;" onsubmit="addNewProduct(event)">
+          <div class="form-row">
+            <input type="text" id="pName" placeholder="Product Title (e.g. Kraft Paper Bag)" required />
+            <input type="text" id="pCat" placeholder="Category (e.g. Paper Packaging)" required />
+          </div>
+          <input type="text" id="pDesc" placeholder="Short description & highlights" required />
+          <textarea id="pSkus" placeholder="SKUs (one per line): ItemNo | Size | Material | Spec | CaseQty&#10;Example: PB-01 | Medium | Kraft Paper | 25*15*30cm | 500" required></textarea>
+          <button type="submit" class="btn btn-gold">Publish Product to Catalog</button>
+        </form>
+
+        <form id="addPdfTab" class="form-grid" style="display:none;" onsubmit="addNewPdf(event)">
+          <input type="text" id="pdfTitle" placeholder="Catalog Title (e.g. 2026 Paper Boxes Catalog)" required />
+          <input type="url" id="pdfUrl" placeholder="Direct PDF Link (Google Drive / Website URL)" required />
+          <button type="submit" class="btn btn-gold">Publish Catalog Link</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // --- Configuration ---
+    const OWNER_WHATSAPP = "919664143828";
+    const OWNER_EMAIL = "infoaqms786@gmail.com";
+    const ADMIN_PASSCODE = "admin123";
+
+
+      // --- Supabase connection ---
+    const SUPABASE_URL = "https://yqgjkwdzanhjcfuohcoc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_IRO73zf-FTdnfGiPi3Cp2w_xnYRpCss";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      // Makes text safe to place inside HTML
+      function esc(s) {
+        return String(s ?? "").replace(/[&<>"']/g, c =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      }
+
+    // --- Default Catalog Data (From Products Catalogue.pdf) ---
+    const DEFAULT_PRODUCTS = [
+      {
+        id: "sauce-cups-clear",
+        name: "Sauce Cups — Clear PP",
+        image: "images/sauce-cups-clear.jpg",
+        category: "Sauce Cups",
+        desc: "Leak-resistant, microwave-safe PP portion cups with food safety certification and matching PET lids.",
+        highlights: ["PP Material", "0.75 – 5.5 OZ", "Microwave Safe"],
+        skus: [
+          { code: "SC75", size: "0.75 OZ", mat: "PP", spec: "Φ45/30*25 mm", qty: "2000/2500" },
+          { code: "SC100", size: "1 OZ", mat: "PP", spec: "Φ45/30*32 mm", qty: "2000/2500" },
+          { code: "SC150", size: "1.5 OZ", mat: "PP", spec: "Φ62/48*23 mm", qty: "2000/2500" },
+          { code: "SC200", size: "2 OZ", mat: "PP", spec: "Φ62/45*30 mm", qty: "2000/2500" },
+          { code: "SC250", size: "2.5 OZ", mat: "PP", spec: "Φ62/45*42 mm", qty: "2000/2500" },
+          { code: "SC325", size: "3.25 OZ", mat: "PP", spec: "Φ74/55*35 mm", qty: "2000/2500" },
+          { code: "SC400", size: "4 OZ", mat: "PP", spec: "Φ74/50*46 mm", qty: "2000/2500" },
+          { code: "SC550", size: "5.5 OZ", mat: "PP", spec: "Φ74/52*60 mm", qty: "2000/2500" },
+          { code: "PCS", size: "Lid S", mat: "PET", spec: "Φ45 mm", qty: "2000/2500" },
+          { code: "PCM", size: "Lid M", mat: "PET", spec: "Φ62 mm", qty: "2000/2500" },
+          { code: "PCL", size: "Lid L", mat: "PET", spec: "Φ74 mm", qty: "2000/2500" }
+        ]
+      },
+      {
+        id: "sauce-cups-black",
+        name: "Sauce Cups — Black PP",
+        image: "images/sauce-cups-black.jpg",
+        category: "Sauce Cups",
+        desc: "Premium black PP portion and condiment cups with rigid walls and secure snap-fit PET lid compatibility.",
+        highlights: ["Black PP", "0.75 – 5.5 OZ", "Leak-Resistant"],
+        skus: [
+          { code: "SCB75", size: "0.75 OZ", mat: "PP", spec: "Φ45/30*25 mm", qty: "2000/2500" },
+          { code: "SCB100", size: "1 OZ", mat: "PP", spec: "Φ45/30*32 mm", qty: "2000/2500" },
+          { code: "SCB150", size: "1.5 OZ", mat: "PP", spec: "Φ62/48*23 mm", qty: "2000/2500" },
+          { code: "SCB200", size: "2 OZ", mat: "PP", spec: "Φ62/45*30 mm", qty: "2000/2500" },
+          { code: "SCB250", size: "2.5 OZ", mat: "PP", spec: "Φ62/45*42 mm", qty: "2000/2500" },
+          { code: "SCB325", size: "3.25 OZ", mat: "PP", spec: "Φ74/55*35 mm", qty: "2000/2500" },
+          { code: "SCB400", size: "4 OZ", mat: "PP", spec: "Φ74/50*46 mm", qty: "2000/2500" },
+          { code: "SCB550", size: "5.5 OZ", mat: "PP", spec: "Φ74/52*60 mm", qty: "2000/2500" }
+        ]
+      },
+      {
+        id: "pet-cups",
+        name: "Crystal Clear PET Cups & U-Cups",
+        image: "images/pet-cups.jpg",
+        category: "PET Cups & Lids",
+        desc: "High-clarity recyclable cold drink cups from 5.5 OZ to 32 OZ across 78mm–117mm diameters, including U-cups.",
+        highlights: ["Crystal PET", "78–117mm Dia", "Custom Branding"],
+        skus: [
+          { code: "PT7855", size: "5.5 OZ", mat: "PET", spec: "Φ78 mm", qty: "1000" },
+          { code: "PT788", size: "8 OZ", mat: "PET", spec: "Φ78 mm", qty: "1000" },
+          { code: "PT8312", size: "12 OZ", mat: "PET", spec: "Φ83 mm", qty: "1000" },
+          { code: "PT9012", size: "12 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PT9016", size: "16 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PT9024", size: "24 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PTU9012", size: "U-Cup 12 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PTU9016", size: "U-Cup 16 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PTU9024", size: "U-Cup 24 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PT9216", size: "16 OZ", mat: "PET", spec: "Φ92 mm", qty: "1000" },
+          { code: "PT9516", size: "16 OZ", mat: "PET", spec: "Φ95 mm", qty: "1000" },
+          { code: "PT9816", size: "16 OZ", mat: "PET", spec: "Φ98 mm", qty: "1000" },
+          { code: "PT9824", size: "24 OZ", mat: "PET", spec: "Φ98 mm", qty: "1000" },
+          { code: "PT10732", size: "32 OZ", mat: "PET", spec: "Φ107 mm", qty: "1000" },
+          { code: "PT11732", size: "32 OZ", mat: "PET", spec: "Φ117 mm", qty: "1000" }
+        ]
+      },
+      {
+        id: "pet-lids",
+        name: "Flat, Sip & Dome Lids for PET Cups",
+        image: "images/pet-lids.jpg",
+        category: "PET Cups & Lids",
+        desc: "Precision-fit clear PET lids in Flat (F), Strawless Sip (S-1), and Dome (D-2) styles.",
+        highlights: ["Flat / Sip / Dome", "89–107mm", "Snap-Fit Seal"],
+        skus: [
+          { code: "PTL90F", size: "Flat (9–16.5 oz)", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PTL95F", size: "Flat (9–24 oz)", mat: "PET", spec: "Φ95 mm", qty: "1000" },
+          { code: "PTL98F", size: "Flat (12–24 oz)", mat: "PET", spec: "Φ98 mm", qty: "1000" },
+          { code: "PTL107F", size: "Flat (32 oz)", mat: "PET", spec: "Φ107 mm", qty: "1000" },
+          { code: "PTL90S-1", size: "Sip (9–16.5 oz)", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PTL95S-1", size: "Sip (9–24 oz)", mat: "PET", spec: "Φ95 mm", qty: "1000" },
+          { code: "PTL98S-1", size: "Sip (12–24 oz)", mat: "PET", spec: "Φ98 mm", qty: "1000" },
+          { code: "PTL90D-2", size: "Dome (9–16.5 oz)", mat: "PET", spec: "Φ90 mm", qty: "1000" },
+          { code: "PTL95D-2", size: "Dome (9–24 oz)", mat: "PET", spec: "Φ95 mm", qty: "1000" },
+          { code: "PTL98D-2", size: "Dome (12–24 oz)", mat: "PET", spec: "Φ98 mm", qty: "1000" },
+          { code: "PTL107D", size: "Dome (32 oz)", mat: "PET", spec: "Φ107 mm", qty: "1000" }
+        ]
+      },
+      {
+        id: "injection-containers",
+        name: "Injection Food Containers & Bowls",
+        image: "images/injection-containers.jpg",
+        category: "Injection Containers",
+        desc: "Stackable, leak-resistant, microwaveable PP rectangular lunch boxes and round soup/deli bowls.",
+        highlights: ["Heavy-Duty PP", "500–1000 cc / 12–32 OZ", "Stackable"],
+        skus: [
+          { code: "ISQ500", size: "500 cc", mat: "PP", spec: "11.5*17*3.5 cm", qty: "500" },
+          { code: "ISQ650", size: "650 cc", mat: "PP", spec: "11.5*17*4.7 cm", qty: "500" },
+          { code: "ISQ750", size: "750 cc", mat: "PP", spec: "11.5*17*5.5 cm", qty: "500" },
+          { code: "ISQ1000", size: "1000 cc", mat: "PP", spec: "11.5*17*6.8 cm", qty: "500" },
+          { code: "RE12", size: "12 OZ", mat: "PP", spec: "14.0*11.5*4.8 cm", qty: "150" },
+          { code: "RE16", size: "16 OZ", mat: "PP", spec: "18.6*12.8*4.3 cm", qty: "150" },
+          { code: "RE24", size: "24 OZ", mat: "PP", spec: "18.6*12.8*5.9 cm", qty: "150" },
+          { code: "RE28", size: "28 OZ", mat: "PP", spec: "22.4*15.4*4.3 cm", qty: "150" },
+          { code: "RE32", size: "32 OZ", mat: "PP", spec: "22.4*15.4*5.5 cm", qty: "150" },
+          { code: "IC360", size: "Bowl 360 cc", mat: "PP", spec: "Φ12/4*4.8 cm", qty: "600" },
+          { code: "IC500", size: "Bowl 500 cc", mat: "PP", spec: "Φ12/7.5*5.5 cm", qty: "600" },
+          { code: "IC700", size: "Bowl 700 cc", mat: "PP", spec: "Φ14/9*7 cm", qty: "600" },
+          { code: "IC999", size: "Bowl 999 cc", mat: "PP", spec: "Φ14/9.5*9 cm", qty: "600" },
+          { code: "ICA450", size: "Wide Bowl 450 cc", mat: "PP", spec: "Φ15/11*3.6 cm", qty: "300" },
+          { code: "ICA1000", size: "Wide Bowl 1000 cc", mat: "PP", spec: "Φ17.5/13.5*5.5 cm", qty: "150" }
+        ]
+      },
+      {
+        id: "multi-compartment",
+        name: "Multi-Compartment Meal Containers",
+        image: "images/multi-compartment.jpg",
+        category: "Injection Containers",
+        desc: "2, 3, and 4-compartment square & round PP bento containers plus large 1200–1500cc family trays.",
+        highlights: ["2 / 3 / 4 Comp", "Meal Prep & Catering", "150 / Case"],
+        skus: [
+          { code: "IS2C500", size: "2-Comp 500 cc", mat: "PP", spec: "11.5*17*3.5 cm", qty: "150" },
+          { code: "IS2C650", size: "2-Comp 650 cc", mat: "PP", spec: "11.5*17*4.7 cm", qty: "150" },
+          { code: "IS2C1000", size: "2-Comp 1000 cc", mat: "PP", spec: "11.5*17*5.5 cm", qty: "150" },
+          { code: "IS2CA", size: "2-Comp Wide", mat: "PP", spec: "22.5*16*5 cm", qty: "150" },
+          { code: "IS3C", size: "3-Comp Square", mat: "PP", spec: "22*19*3.5 cm", qty: "150" },
+          { code: "IS4C", size: "4-Comp Square", mat: "PP", spec: "22*19*3.5 cm", qty: "150" },
+          { code: "IC3C", size: "3-Comp Circle", mat: "PP", spec: "22*19*3.5 cm", qty: "150" },
+          { code: "SL1200", size: "Large 1200 cc", mat: "PP", spec: "21.5*15*5 cm", qty: "150" },
+          { code: "SL1500", size: "Large 1500 cc", mat: "PP", spec: "21.5*15*6 cm", qty: "150" }
+        ]
+      },
+      {
+        id: "disposable-gloves",
+        name: "Vinyl & Nitrile Disposable Gloves",
+        image: "images/gloves.jpg",
+        category: "Disposable Gloves",
+        desc: "Powder-free, seamless, pinhole-free food-service gloves offering tear resistance and tactile sensitivity.",
+        highlights: ["Powder-Free", "Vinyl & Nitrile", "S / M / L / XL"],
+        skus: [
+          { code: "VG-S", size: "Vinyl S (3.5g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
+          { code: "VG-M", size: "Vinyl M (4g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
+          { code: "VG-L", size: "Vinyl L (4.5g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
+          { code: "VG-XL", size: "Vinyl XL (5g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
+          { code: "NG-S", size: "Nitrile S (3g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" },
+          { code: "NG-M", size: "Nitrile M (3.5g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" },
+          { code: "NG-L", size: "Nitrile L (4g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" },
+          { code: "NG-XL", size: "Nitrile XL (4g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" }
+        ]
+      },
+      {
+        id: "oem-range",
+        name: "Extended OEM Packaging Range",
+        image: "images/oem-range.jpg",
+        category: "Extended Range",
+        desc: "Custom-molded Hinged Containers, Cake Containers & Lids, Sushi Trays, and Salad Bowls.",
+        highlights: ["In-House Molds", "PS/OPS/PET/PLA", "Bulk OEM"],
+        skus: [
+          { code: "OEM-HINGE", size: "Hinged Clamshell", mat: "PP / PS / PET", spec: "Custom Sizes", qty: "Bulk MOQ" },
+          { code: "OEM-CAKE", size: "Cake Container & Lid", mat: "PET / OPS", spec: "Round / Square", qty: "Bulk MOQ" },
+          { code: "OEM-SUSHI", size: "Sushi Tray & Lid", mat: "PET / PS", spec: "Black / Patterned", qty: "Bulk MOQ" },
+          { code: "OEM-SALAD", size: "Salad Bowl & Lid", mat: "PET / RPET", spec: "Clear / Tamper-Evident", qty: "Bulk MOQ" }
+        ]
+      }
+    ];
+
+    const DEFAULT_PDFS = [
+      { title: "AQMS Master Products Catalogue (11 Pages)", url: "D:\01 haider bzar site\site eample 2\Products Catalogue.pdf" }
+    ];
+
+    // --- State Management (localStorage) ---
+    let products = JSON.parse(localStorage.getItem("ef_products")) || DEFAULT_PRODUCTS;
+    let pdfs = JSON.parse(localStorage.getItem("ef_pdfs")) || DEFAULT_PDFS;
+    let inquiries = JSON.parse(localStorage.getItem("ef_inquiries")) || [];
+    let tray = [];
+    let activeCat = "All";
+
+    function saveState() {
+      localStorage.setItem("ef_products", JSON.stringify(products));
+      localStorage.setItem("ef_pdfs", JSON.stringify(pdfs));
+      localStorage.setItem("ef_inquiries", JSON.stringify(inquiries));
+    }
+
+    // --- Render Catalog ---
+    function renderTabs() {
+      const cats = ["All", ...new Set(products.map(p => p.category))];
+      document.getElementById("categoryTabs").innerHTML = cats.map(c => `
+        <button class="tab ${c === activeCat ? 'active' : ''}" onclick="setCat('${c}')">${c}</button>
+      `).join("");
+    }
+
+    function setCat(c) {
+      activeCat = c;
+      renderTabs();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const q = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = products.filter(p => {
+        const matchCat = activeCat === "All" || p.category === activeCat;
+        const matchText = p.name.toLowerCase().includes(q) ||
+          p.desc.toLowerCase().includes(q) ||
+          p.skus.some(s => s.code.toLowerCase().includes(q) || s.size.toLowerCase().includes(q));
+        return matchCat && matchText;
+      });
+
+      document.getElementById("productGrid").innerHTML = filtered.map(p => `
+        <div class="card">
+          <div>
+                          
+        ${p.image ? `<img class="card-img" src="${p.image}" alt="${p.name}" loading="lazy">` : ""}
+
+            <div class="card-top">
+              <span class="pill">${p.category}</span>
+              <span style="color:var(--muted); font-size:0.78rem;">${p.skus.length} SKUs</span>
+            </div>
+            <h3>${p.name}</h3>
+            <p style="margin-top:0.5rem;">${p.desc}</p>
+          </div>
+
+          <div>
+            <ul class="meta-list" style="margin-bottom:0.85rem;">
+              ${(p.highlights || []).map(h => `<li>${h}</li>`).join("")}
+            </ul>
+
+            <div class="card-actions">
+              <button class="btn btn-outline" onclick="openSkuModal('${p.id}')">View Specs</button>
+              <button class="btn btn-gold" onclick="addToTray('${p.name} (General)')">+ Inquire</button>
+            </div>
+          </div>
+        </div>
+      `).join("") || `<p style="color:var(--muted);">No matching products found.</p>`;
+    }
+
+    function renderPdfs() {
+      document.getElementById("pdfGrid").innerHTML = pdfs.map(pdf => `
+        <div class="card">
+          <div>
+            <span class="pill">PDF Catalog</span>
+            <h3 style="margin-top:0.6rem;">${pdf.title}</h3>
+          </div>
+          <a href="${pdf.url}" target="_blank" class="btn btn-outline" style="width:fit-content;">Open / Download</a>
+        </div>
+      `).join("");
+    }
+
+    // --- SKU Modal ---
+    function openSkuModal(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById("modalCat").textContent = p.category;
+      document.getElementById("modalTitle").textContent = p.name;
+      document.getElementById("modalDesc").textContent = p.desc;
+      document.getElementById("modalTableBody").innerHTML = p.skus.map(s => `
+        <tr>
+          <td><strong>${s.code}</strong></td>
+          <td>${s.size}</td>
+          <td>${s.mat}</td>
+          <td>${s.spec}</td>
+          <td>${s.qty}</td>
+          <td><button class="btn btn-gold" style="padding:0.35rem 0.7rem; font-size:0.76rem;" onclick="addToTray('${s.code} - ${p.name} (${s.size})')">+ Add</button></td>
+        </tr>
+      `).join("");
+      document.getElementById("skuModal").classList.add("open");
+    }
+
+    // --- Inquiry Tray ---
+    function addToTray(label) {
+      if (!tray.includes(label)) tray.push(label);
+      document.getElementById("trayCount").textContent = tray.length;
+    }
+
+    function removeFromTray(idx) {
+      tray.splice(idx, 1);
+      document.getElementById("trayCount").textContent = tray.length;
+      renderTray();
+    }
+
+    function renderTray() {
+      const box = document.getElementById("trayItems");
+      if (!tray.length) {
+        box.innerHTML = `<p style="color:var(--muted); font-size:0.9rem;">No specific SKUs selected yet — you can still submit a general bulk inquiry below.</p>`;
+        return;
+      }
+      box.innerHTML = tray.map((item, i) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0.75rem; background:var(--surface-2); border-radius:8px; margin-bottom:0.4rem; font-size:0.86rem;">
+          <span>${esc(item)}</span>
+          <button onclick="removeFromTray(${i})" style="background:none; border:none; color:#c0392b; cursor:pointer;">Remove</button>
+        </div>
+      `).join("");
+    }
+
+    function openTray() {
+      renderTray();
+      document.getElementById("trayModal").classList.add("open");
+    }
+
+    function buildInquiryPayload() {
+      return {
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        name: document.getElementById("inqName").value.trim(),
+        company: document.getElementById("inqCompany").value.trim(),
+        email: document.getElementById("inqEmail").value.trim(),
+        phone: document.getElementById("inqPhone").value.trim(),
+        notes: document.getElementById("inqNotes").value.trim(),
+        items: tray.length ? [...tray] : ["General Bulk Catalog Inquiry"]
+      };
+    }
+
+    document.getElementById("inquiryForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const data = buildInquiryPayload();
+      inquiries.unshift(data);
+      saveState();
+
+      const msg = encodeURIComponent(
+        `Hello AQMS ,\n\nNew B2B Product Inquiry:\n` +
+        `Name: ${data.name}\nCompany: ${data.company}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n` +
+        `Requested Items:\n- ${data.items.join("\n- ")}\n\nNotes: ${data.notes || "N/A"}`
+      );
+      window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${msg}`, "_blank");
+      tray = [];
+      document.getElementById("trayCount").textContent = "0";
+      e.target.reset();
+      closeModal("trayModal");
+    });
+
+    function submitEmailInquiry() {
+      const form = document.getElementById("inquiryForm");
+      if (!form.reportValidity()) return;
+      const data = buildInquiryPayload();
+      inquiries.unshift(data);
+      saveState();
+
+      const subject = encodeURIComponent(`B2B Inquiry from ${data.company}`);
+      const body = encodeURIComponent(
+        `Name: ${data.name}\nCompany: ${data.company}\nPhone: ${data.phone}\n\nItems:\n- ${data.items.join("\n- ")}\n\nNotes: ${data.notes || "N/A"}`
+      );
+      window.location.href = `mailto:${OWNER_EMAIL}?subject=${subject}&body=${body}`;
+      closeModal("trayModal");
+    }
+
+    //                                         --- Owner Backend ---
+
+
+    function openAdmin() {
+      document.getElementById("adminModal").classList.add("open");
+      renderInquiries();
+    }
+
+    function loginAdmin() {
+      if (document.getElementById("adminPass").value === ADMIN_PASSCODE) {
+        document.getElementById("adminLogin").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        renderInquiries();
+      } else {
+        alert("Incorrect passcode.");
+      }
+    }
+
+    function switchAdminTab(tabId, btn) {
+      ["inqTab", "addProdTab", "addPdfTab"].forEach(id => {
+        document.getElementById(id).style.display = id === tabId ? (id === "inqTab" ? "block" : "grid") : "none";
+      });
+      btn.parentElement.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
+    function renderInquiries() {
+      const el = document.getElementById("inqTab");
+      if (!inquiries.length) {
+        el.innerHTML = `<p style="color:var(--muted);">No inquiries logged yet.</p>`;
+        return;
+      }
+      el.innerHTML = inquiries.map(inq => `
+        <div class="info-box" style="margin-bottom:0.85rem; padding:1rem;">
+          <div style="display:flex; justify-content:space-between; font-size:0.82rem; color:var(--gold-light);">
+            <strong>${inq.company} (${inq.name})</strong>
+            <span>${inq.date}</span>
+          </div>
+          <p style="font-size:0.84rem; color:var(--muted); margin:0.35rem 0;">${inq.email} • ${inq.phone}</p>
+          <p style="font-size:0.85rem;"><strong>Items:</strong> ${inq.items.join(", ")}</p>
+          ${inq.notes ? `<p style="font-size:0.82rem; color:var(--muted); margin-top:0.25rem;">Notes: ${inq.notes}</p>` : ""}
+        </div>
+      `).join("");
+    }
+
+    function addNewProduct(e) {
+      e.preventDefault();
+      const lines = document.getElementById("pSkus").value.trim().split("\n");
+      const skus = lines.map(l => {
+        const [code, size, mat, spec, qty] = l.split("|").map(s => (s || "").trim());
+        return { code: code || "SKU", size: size || "-", mat: mat || "-", spec: spec || "-", qty: qty || "-" };
+      });
+      products.unshift({
+        id: "custom-" + Date.now(),
+        name: document.getElementById("pName").value.trim(),
+        category: document.getElementById("pCat").value.trim(),
+        desc: document.getElementById("pDesc").value.trim(),
+        highlights: ["Newly Added", `${skus.length} SKUs`],
+        skus
+      });
+      saveState();
+      renderTabs();
+      renderProducts();
+      e.target.reset();
+      alert("Product published to catalog!");
+    }
+
+    function addNewPdf(e) {
+      e.preventDefault();
+      pdfs.unshift({
+        title: document.getElementById("pdfTitle").value.trim(),
+        url: document.getElementById("pdfUrl").value.trim()
+      });
+      saveState();
+      renderPdfs();
+      e.target.reset();
+      alert("Catalog link published!");
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+    // --- Scroll Reveal & Counters ---
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("visible");
+        entry.target.querySelectorAll(".stat-num").forEach(el => {
+          const target = +el.dataset.target;
+          let cur = 0;
+          const step = Math.max(1, Math.ceil(target / 45));
+          const timer = setInterval(() => {
+            cur += step;
+            if (cur >= target) { el.textContent = target.toLocaleString() + (target === 20 ? "+" : ""); clearInterval(timer); }
+            else el.textContent = cur.toLocaleString();
+          }, 25);
+        });
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+         // --- Mobile menu ---
+const menuBtn = document.getElementById("menuBtn");
+const navEl = document.querySelector("nav");
+
+menuBtn.addEventListener("click", () => {
+  const isOpen = navEl.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", isOpen);
+});
+
+navEl.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => navEl.classList.remove("open"));
+});
+
+
+        // --- Offers slider (data comes from Supabase) ---
+    async function renderOffers() {
+      const section = document.getElementById("offers");
+
+      let rows;
+      try {
+        const { data, error } = await sb.from("offers")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        rows = data;
+      } catch (err) {
+        console.error("Offers could not load:", err);
+        return;
+      }
+
+      const today = new Date().toISOString().slice(0, 10);
+      const active = rows.filter(o => !o.ends_on || o.ends_on >= today);
+      if (!active.length) return;
+      section.hidden = false;
+
+      document.getElementById("offerTrack").innerHTML = active.map((o, i) => `
+        <article class="offer-slide ${i === 0 ? "active" : ""} ${o.image_url ? "" : "no-img"}">
+          ${o.image_url ? `<img class="offer-img" src="${esc(o.image_url)}" alt="${esc(o.title)}">` : ""}
+          <div class="offer-body">
+            ${o.badge ? `<span class="offer-badge">${esc(o.badge)}</span>` : ""}
+            <h3>${esc(o.title)}</h3>
+            ${o.description ? `<p>${esc(o.description)}</p>` : ""}
+            ${o.ends_on ? `<span class="offer-ends">Valid until ${esc(o.ends_on)}</span>` : ""}
+            <button class="btn btn-gold offer-inquire" style="width:fit-content;" data-title="${esc(o.title)}">Inquire about this offer</button>
+          </div>
+        </article>
+      `).join("");
+
+      document.querySelectorAll(".offer-inquire").forEach(b =>
+        b.addEventListener("click", () => { addToTray("Offer: " + b.dataset.title); openTray(); }));
+
+      const dots = document.getElementById("offerDots");
+      dots.innerHTML = active.length > 1
+        ? active.map((_, i) => `<button class="offer-dot ${i === 0 ? "active" : ""}" aria-label="Show offer ${i + 1}" data-i="${i}"></button>`).join("")
+        : "";
+
+      const slides = document.querySelectorAll(".offer-slide");
+      const dotEls = document.querySelectorAll(".offer-dot");
+      let current = 0, timer;
+
+      function show(n) {
+        slides[current].classList.remove("active");
+        dotEls[current]?.classList.remove("active");
+        current = (n + slides.length) % slides.length;
+        slides[current].classList.add("active");
+        dotEls[current]?.classList.add("active");
+      }
+      function start() {
+        if (slides.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        timer = setInterval(() => show(current + 1), 6000);
+      }
+      function stop() { clearInterval(timer); }
+
+      dotEls.forEach(d => d.addEventListener("click", () => { stop(); show(+d.dataset.i); start(); }));
+      const slider = document.getElementById("offerSlider");
+      slider.addEventListener("mouseenter", stop);
+      slider.addEventListener("mouseleave", start);
+      start();
+    }
+
+
+    // --- Init ---
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("searchInput").addEventListener("input", renderProducts);
+    renderTabs();
+    renderProducts();
+    renderPdfs();
+    renderOffers();
+
+  </script>
+</body>
+</html>
