@@ -809,7 +809,7 @@
           </p>
         </div>
         <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-          <a class="btn btn-gold" href="https://wa.me/919664143828" target="_blank">WhatsApp Direct</a>
+          <a class="btn btn-gold" href="https://wa.me/919664143828" target="_blank" rel="noopener noreferrer">WhatsApp Direct</a>
           <a class="btn btn-outline" href="mailto:infoaqms786@gmail.com">Email Desk</a>
         </div>
       </div>
@@ -818,7 +818,7 @@
 
   <footer>
     &copy; <span id="year"></span> AQMS — All Rights Reserved. |
-    <a href="https://www.AQMS.com" target="_blank">www.AQMS.com</a>
+    <a href="https://www.AQMS.com" target="_blank" rel="noopener noreferrer">www.AQMS.com</a>
   </footer>
 
   <!-- SKU Details Modal -->
@@ -886,19 +886,15 @@
         <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
       </div>
 
-      <div id="adminLogin">
-        <p style="color:var(--muted); margin-bottom:1rem;">Enter owner passcode to manage products, catalogs, and incoming inquiries (Default: <code>admin123</code>).</p>
-        <div style="display:flex; gap:0.75rem;">
-          <input type="password" id="adminPass" placeholder="Passcode" />
-          <button class="btn btn-gold" onclick="loginAdmin()">Unlock</button>
-        </div>
-      </div>
-
-      <div id="adminPanel" style="display:none;">
+      <form id="adminLogin" class="form-grid" onsubmit="loginAdmin(event)">
+<input id="adminEmail" type="email" placeholder="Owner email" required autocomplete="username">
+<input id="adminPass" type="password" placeholder="Password" required autocomplete="current-password">
+<button class="btn btn-gold">Sign in</button></form>
+      <div id="adminPanel" style="display:none;"><button class="btn btn-outline" onclick="logoutAdmin()">Logout</button>
         <div class="tabs" style="margin-bottom:1.25rem;">
           <button class="tab active" onclick="switchAdminTab('inqTab', this)">Inquiries</button>
           <button class="tab" onclick="switchAdminTab('addProdTab', this)">+ Add Product</button>
-          <button class="tab" onclick="switchAdminTab('addPdfTab', this)">+ Add PDF Catalog</button>
+          <button class="tab" onclick="switchAdminTab('addPdfTab', this)">Manage PDF Catalogs</button><button class="tab" onclick="switchAdminTab('offersTab', this)">Manage Offers</button>
         </div>
 
         <div id="inqTab"></div>
@@ -908,16 +904,19 @@
             <input type="text" id="pName" placeholder="Product Title (e.g. Kraft Paper Bag)" required />
             <input type="text" id="pCat" placeholder="Category (e.g. Paper Packaging)" required />
           </div>
-          <input type="text" id="pDesc" placeholder="Short description & highlights" required />
+          <input type="file" id="pFile" accept="image/jpeg,image/png,image/webp"><input type="text" id="pDesc" placeholder="Short description & highlights" required />
           <textarea id="pSkus" placeholder="SKUs (one per line): ItemNo | Size | Material | Spec | CaseQty&#10;Example: PB-01 | Medium | Kraft Paper | 25*15*30cm | 500" required></textarea>
           <button type="submit" class="btn btn-gold">Publish Product to Catalog</button>
         </form>
 
         <form id="addPdfTab" class="form-grid" style="display:none;" onsubmit="addNewPdf(event)">
           <input type="text" id="pdfTitle" placeholder="Catalog Title (e.g. 2026 Paper Boxes Catalog)" required />
-          <input type="url" id="pdfUrl" placeholder="Direct PDF Link (Google Drive / Website URL)" required />
-          <button type="submit" class="btn btn-gold">Publish Catalog Link</button>
+          <input type="url" id="pdfUrl" placeholder="Direct PDF Link (optional)" />
+          <input type="file" id="pdfFile" accept="application/pdf"><button type="submit" class="btn btn-gold">Save Catalog</button>
         </form>
+        <form id="offersTab" class="form-grid" style="display:none" onsubmit="saveOffer(event)">
+<input id="oTitle" placeholder="Offer title" required><input id="oBadge" placeholder="Badge"><textarea id="oDesc" placeholder="Description"></textarea><label>Expiry (optional)<input id="oEnd" type="date"></label><input id="oUrl" type="url" placeholder="Image URL (optional)"><input id="oFile" type="file" accept="image/jpeg,image/png,image/webp"><button class="btn btn-gold">Save Offer</button></form>
+<div id="manageList"></div><p id="adminStatus" role="status"></p>
       </div>
     </div>
   </div>
@@ -928,12 +927,12 @@
     // --- Configuration ---
     const OWNER_WHATSAPP = "919664143828";
     const OWNER_EMAIL = "infoaqms786@gmail.com";
-    const ADMIN_PASSCODE = "admin123";
+    
 
 
       // --- Supabase connection ---
-    const SUPABASE_URL = "https://yqgjkwdzanhjcfuohcoc.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_IRO73zf-FTdnfGiPi3Cp2w_xnYRpCss";
+    const SUPABASE_URL = "https://rypzbdzrattlvqzryssw.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_vQ3nbRuEvcrae-w28-b3YA_ZwP3WJun";
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
       // Makes text safe to place inside HTML
@@ -942,193 +941,17 @@
         ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
       }
 
-    // --- Default Catalog Data (From Products Catalogue.pdf) ---
-    const DEFAULT_PRODUCTS = [
-      {
-        id: "sauce-cups-clear",
-        name: "Sauce Cups — Clear PP",
-        image: "sauce-cups-clear.jpg",
-        category: "Sauce Cups",
-        desc: "Leak-resistant, microwave-safe PP portion cups with food safety certification and matching PET lids.",
-        highlights: ["PP Material", "0.75 – 5.5 OZ", "Microwave Safe"],
-        skus: [
-          { code: "SC75", size: "0.75 OZ", mat: "PP", spec: "Φ45/30*25 mm", qty: "2000/2500" },
-          { code: "SC100", size: "1 OZ", mat: "PP", spec: "Φ45/30*32 mm", qty: "2000/2500" },
-          { code: "SC150", size: "1.5 OZ", mat: "PP", spec: "Φ62/48*23 mm", qty: "2000/2500" },
-          { code: "SC200", size: "2 OZ", mat: "PP", spec: "Φ62/45*30 mm", qty: "2000/2500" },
-          { code: "SC250", size: "2.5 OZ", mat: "PP", spec: "Φ62/45*42 mm", qty: "2000/2500" },
-          { code: "SC325", size: "3.25 OZ", mat: "PP", spec: "Φ74/55*35 mm", qty: "2000/2500" },
-          { code: "SC400", size: "4 OZ", mat: "PP", spec: "Φ74/50*46 mm", qty: "2000/2500" },
-          { code: "SC550", size: "5.5 OZ", mat: "PP", spec: "Φ74/52*60 mm", qty: "2000/2500" },
-          { code: "PCS", size: "Lid S", mat: "PET", spec: "Φ45 mm", qty: "2000/2500" },
-          { code: "PCM", size: "Lid M", mat: "PET", spec: "Φ62 mm", qty: "2000/2500" },
-          { code: "PCL", size: "Lid L", mat: "PET", spec: "Φ74 mm", qty: "2000/2500" }
-        ]
-      },
-      {
-        id: "sauce-cups-black",
-        name: "Sauce Cups — Black PP",
-        image: "sauce-cups-black.jpg",
-        category: "Sauce Cups",
-        desc: "Premium black PP portion and condiment cups with rigid walls and secure snap-fit PET lid compatibility.",
-        highlights: ["Black PP", "0.75 – 5.5 OZ", "Leak-Resistant"],
-        skus: [
-          { code: "SCB75", size: "0.75 OZ", mat: "PP", spec: "Φ45/30*25 mm", qty: "2000/2500" },
-          { code: "SCB100", size: "1 OZ", mat: "PP", spec: "Φ45/30*32 mm", qty: "2000/2500" },
-          { code: "SCB150", size: "1.5 OZ", mat: "PP", spec: "Φ62/48*23 mm", qty: "2000/2500" },
-          { code: "SCB200", size: "2 OZ", mat: "PP", spec: "Φ62/45*30 mm", qty: "2000/2500" },
-          { code: "SCB250", size: "2.5 OZ", mat: "PP", spec: "Φ62/45*42 mm", qty: "2000/2500" },
-          { code: "SCB325", size: "3.25 OZ", mat: "PP", spec: "Φ74/55*35 mm", qty: "2000/2500" },
-          { code: "SCB400", size: "4 OZ", mat: "PP", spec: "Φ74/50*46 mm", qty: "2000/2500" },
-          { code: "SCB550", size: "5.5 OZ", mat: "PP", spec: "Φ74/52*60 mm", qty: "2000/2500" }
-        ]
-      },
-      {
-        id: "pet-cups",
-        name: "Crystal Clear PET Cups & U-Cups",
-        image: "pet-cups.jpg",
-        category: "PET Cups & Lids",
-        desc: "High-clarity recyclable cold drink cups from 5.5 OZ to 32 OZ across 78mm–117mm diameters, including U-cups.",
-        highlights: ["Crystal PET", "78–117mm Dia", "Custom Branding"],
-        skus: [
-          { code: "PT7855", size: "5.5 OZ", mat: "PET", spec: "Φ78 mm", qty: "1000" },
-          { code: "PT788", size: "8 OZ", mat: "PET", spec: "Φ78 mm", qty: "1000" },
-          { code: "PT8312", size: "12 OZ", mat: "PET", spec: "Φ83 mm", qty: "1000" },
-          { code: "PT9012", size: "12 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PT9016", size: "16 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PT9024", size: "24 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PTU9012", size: "U-Cup 12 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PTU9016", size: "U-Cup 16 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PTU9024", size: "U-Cup 24 OZ", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PT9216", size: "16 OZ", mat: "PET", spec: "Φ92 mm", qty: "1000" },
-          { code: "PT9516", size: "16 OZ", mat: "PET", spec: "Φ95 mm", qty: "1000" },
-          { code: "PT9816", size: "16 OZ", mat: "PET", spec: "Φ98 mm", qty: "1000" },
-          { code: "PT9824", size: "24 OZ", mat: "PET", spec: "Φ98 mm", qty: "1000" },
-          { code: "PT10732", size: "32 OZ", mat: "PET", spec: "Φ107 mm", qty: "1000" },
-          { code: "PT11732", size: "32 OZ", mat: "PET", spec: "Φ117 mm", qty: "1000" }
-        ]
-      },
-      {
-        id: "pet-lids",
-        name: "Flat, Sip & Dome Lids for PET Cups",
-        image: "pet-lids.jpg",
-        category: "PET Cups & Lids",
-        desc: "Precision-fit clear PET lids in Flat (F), Strawless Sip (S-1), and Dome (D-2) styles.",
-        highlights: ["Flat / Sip / Dome", "89–107mm", "Snap-Fit Seal"],
-        skus: [
-          { code: "PTL90F", size: "Flat (9–16.5 oz)", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PTL95F", size: "Flat (9–24 oz)", mat: "PET", spec: "Φ95 mm", qty: "1000" },
-          { code: "PTL98F", size: "Flat (12–24 oz)", mat: "PET", spec: "Φ98 mm", qty: "1000" },
-          { code: "PTL107F", size: "Flat (32 oz)", mat: "PET", spec: "Φ107 mm", qty: "1000" },
-          { code: "PTL90S-1", size: "Sip (9–16.5 oz)", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PTL95S-1", size: "Sip (9–24 oz)", mat: "PET", spec: "Φ95 mm", qty: "1000" },
-          { code: "PTL98S-1", size: "Sip (12–24 oz)", mat: "PET", spec: "Φ98 mm", qty: "1000" },
-          { code: "PTL90D-2", size: "Dome (9–16.5 oz)", mat: "PET", spec: "Φ90 mm", qty: "1000" },
-          { code: "PTL95D-2", size: "Dome (9–24 oz)", mat: "PET", spec: "Φ95 mm", qty: "1000" },
-          { code: "PTL98D-2", size: "Dome (12–24 oz)", mat: "PET", spec: "Φ98 mm", qty: "1000" },
-          { code: "PTL107D", size: "Dome (32 oz)", mat: "PET", spec: "Φ107 mm", qty: "1000" }
-        ]
-      },
-      {
-        id: "injection-containers",
-        name: "Injection Food Containers & Bowls",
-        image: "injection-containers.jpg",
-        category: "Injection Containers",
-        desc: "Stackable, leak-resistant, microwaveable PP rectangular lunch boxes and round soup/deli bowls.",
-        highlights: ["Heavy-Duty PP", "500–1000 cc / 12–32 OZ", "Stackable"],
-        skus: [
-          { code: "ISQ500", size: "500 cc", mat: "PP", spec: "11.5*17*3.5 cm", qty: "500" },
-          { code: "ISQ650", size: "650 cc", mat: "PP", spec: "11.5*17*4.7 cm", qty: "500" },
-          { code: "ISQ750", size: "750 cc", mat: "PP", spec: "11.5*17*5.5 cm", qty: "500" },
-          { code: "ISQ1000", size: "1000 cc", mat: "PP", spec: "11.5*17*6.8 cm", qty: "500" },
-          { code: "RE12", size: "12 OZ", mat: "PP", spec: "14.0*11.5*4.8 cm", qty: "150" },
-          { code: "RE16", size: "16 OZ", mat: "PP", spec: "18.6*12.8*4.3 cm", qty: "150" },
-          { code: "RE24", size: "24 OZ", mat: "PP", spec: "18.6*12.8*5.9 cm", qty: "150" },
-          { code: "RE28", size: "28 OZ", mat: "PP", spec: "22.4*15.4*4.3 cm", qty: "150" },
-          { code: "RE32", size: "32 OZ", mat: "PP", spec: "22.4*15.4*5.5 cm", qty: "150" },
-          { code: "IC360", size: "Bowl 360 cc", mat: "PP", spec: "Φ12/4*4.8 cm", qty: "600" },
-          { code: "IC500", size: "Bowl 500 cc", mat: "PP", spec: "Φ12/7.5*5.5 cm", qty: "600" },
-          { code: "IC700", size: "Bowl 700 cc", mat: "PP", spec: "Φ14/9*7 cm", qty: "600" },
-          { code: "IC999", size: "Bowl 999 cc", mat: "PP", spec: "Φ14/9.5*9 cm", qty: "600" },
-          { code: "ICA450", size: "Wide Bowl 450 cc", mat: "PP", spec: "Φ15/11*3.6 cm", qty: "300" },
-          { code: "ICA1000", size: "Wide Bowl 1000 cc", mat: "PP", spec: "Φ17.5/13.5*5.5 cm", qty: "150" }
-        ]
-      },
-      {
-        id: "multi-compartment",
-        name: "Multi-Compartment Meal Containers",
-        image: "multi-compartment.jpg",
-        category: "Injection Containers",
-        desc: "2, 3, and 4-compartment square & round PP bento containers plus large 1200–1500cc family trays.",
-        highlights: ["2 / 3 / 4 Comp", "Meal Prep & Catering", "150 / Case"],
-        skus: [
-          { code: "IS2C500", size: "2-Comp 500 cc", mat: "PP", spec: "11.5*17*3.5 cm", qty: "150" },
-          { code: "IS2C650", size: "2-Comp 650 cc", mat: "PP", spec: "11.5*17*4.7 cm", qty: "150" },
-          { code: "IS2C1000", size: "2-Comp 1000 cc", mat: "PP", spec: "11.5*17*5.5 cm", qty: "150" },
-          { code: "IS2CA", size: "2-Comp Wide", mat: "PP", spec: "22.5*16*5 cm", qty: "150" },
-          { code: "IS3C", size: "3-Comp Square", mat: "PP", spec: "22*19*3.5 cm", qty: "150" },
-          { code: "IS4C", size: "4-Comp Square", mat: "PP", spec: "22*19*3.5 cm", qty: "150" },
-          { code: "IC3C", size: "3-Comp Circle", mat: "PP", spec: "22*19*3.5 cm", qty: "150" },
-          { code: "SL1200", size: "Large 1200 cc", mat: "PP", spec: "21.5*15*5 cm", qty: "150" },
-          { code: "SL1500", size: "Large 1500 cc", mat: "PP", spec: "21.5*15*6 cm", qty: "150" }
-        ]
-      },
-      {
-        id: "disposable-gloves",
-        name: "Vinyl & Nitrile Disposable Gloves",
-        image: "gloves.jpg",
-        category: "Disposable Gloves",
-        desc: "Powder-free, seamless, pinhole-free food-service gloves offering tear resistance and tactile sensitivity.",
-        highlights: ["Powder-Free", "Vinyl & Nitrile", "S / M / L / XL"],
-        skus: [
-          { code: "VG-S", size: "Vinyl S (3.5g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
-          { code: "VG-M", size: "Vinyl M (4g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
-          { code: "VG-L", size: "Vinyl L (4.5g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
-          { code: "VG-XL", size: "Vinyl XL (5g)", mat: "Vinyl", spec: "Clear/Blue/White/Black", qty: "1000" },
-          { code: "NG-S", size: "Nitrile S (3g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" },
-          { code: "NG-M", size: "Nitrile M (3.5g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" },
-          { code: "NG-L", size: "Nitrile L (4g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" },
-          { code: "NG-XL", size: "Nitrile XL (4g)", mat: "Nitrile", spec: "Blue/White/Black", qty: "1000" }
-        ]
-      },
-      {
-        id: "oem-range",
-        name: "Extended OEM Packaging Range",
-        image: "oem-range.jpg",
-        category: "Extended Range",
-        desc: "Custom-molded Hinged Containers, Cake Containers & Lids, Sushi Trays, and Salad Bowls.",
-        highlights: ["In-House Molds", "PS/OPS/PET/PLA", "Bulk OEM"],
-        skus: [
-          { code: "OEM-HINGE", size: "Hinged Clamshell", mat: "PP / PS / PET", spec: "Custom Sizes", qty: "Bulk MOQ" },
-          { code: "OEM-CAKE", size: "Cake Container & Lid", mat: "PET / OPS", spec: "Round / Square", qty: "Bulk MOQ" },
-          { code: "OEM-SUSHI", size: "Sushi Tray & Lid", mat: "PET / PS", spec: "Black / Patterned", qty: "Bulk MOQ" },
-          { code: "OEM-SALAD", size: "Salad Bowl & Lid", mat: "PET / RPET", spec: "Clear / Tamper-Evident", qty: "Bulk MOQ" }
-        ]
-      }
-    ];
-
-    const DEFAULT_PDFS = [
-      { title: "AQMS Master Products Catalogue (11 Pages)", url: "D:\01 haider bzar site\site eample 2\Products Catalogue.pdf" }
-    ];
-
-    // --- State Management (localStorage) ---
-    let products = JSON.parse(localStorage.getItem("ef_products")) || DEFAULT_PRODUCTS;
-    let pdfs = JSON.parse(localStorage.getItem("ef_pdfs")) || DEFAULT_PDFS;
-    let inquiries = JSON.parse(localStorage.getItem("ef_inquiries")) || [];
-    let tray = [];
-    let activeCat = "All";
-
-    function saveState() {
-      localStorage.setItem("ef_products", JSON.stringify(products));
-      localStorage.setItem("ef_pdfs", JSON.stringify(pdfs));
-      localStorage.setItem("ef_inquiries", JSON.stringify(inquiries));
-    }
-
+    let products=[], pdfs=[], inquiries=[], tray=[], activeCat="All";
+    const $=id=>document.getElementById(id);
+    const arg=v=>esc(JSON.stringify(String(v)));
+    function safeUrl(v,relative=false){try{const u=new URL(v,location.href);return u.protocol==='https:' || (relative && !/^[a-z]+:/i.test(v) && !v.startsWith('//')) ? esc(v):'';}catch{return '';}}
+    async function query(q){const {data,error}=await q;if(error)throw error;return data;}
+    async function loadCatalog(){products=await query(sb.from('products').select('*').order('created_at'));pdfs=await query(sb.from('pdf_catalogs').select('*').order('created_at'));if(!products.some(p=>p.category===activeCat))activeCat='All';renderTabs();renderProducts();renderPdfs();}
     // --- Render Catalog ---
     function renderTabs() {
       const cats = ["All", ...new Set(products.map(p => p.category))];
       document.getElementById("categoryTabs").innerHTML = cats.map(c => `
-        <button class="tab ${c === activeCat ? 'active' : ''}" onclick="setCat('${c}')">${c}</button>
+        <button class="tab ${c === activeCat ? 'active' : ''}" onclick="setCat(${arg(c)})">${esc(c)}</button>
       `).join("");
     }
 
@@ -1152,24 +975,24 @@
         <div class="card">
           <div>
                           
-        ${p.image ? `<img class="card-img" src="${p.image}" alt="${p.name}" loading="lazy">` : ""}
+        ${p.image ? `<img class="card-img" src="${safeUrl(p.image,true)}" alt="${esc(p.name)}" loading="lazy">` : ""}
 
             <div class="card-top">
-              <span class="pill">${p.category}</span>
+              <span class="pill">${esc(p.category)}</span>
               <span style="color:var(--muted); font-size:0.78rem;">${p.skus.length} SKUs</span>
             </div>
-            <h3>${p.name}</h3>
-            <p style="margin-top:0.5rem;">${p.desc}</p>
+            <h3>${esc(p.name)}</h3>
+            <p style="margin-top:0.5rem;">${esc(p.desc)}</p>
           </div>
 
           <div>
             <ul class="meta-list" style="margin-bottom:0.85rem;">
-              ${(p.highlights || []).map(h => `<li>${h}</li>`).join("")}
+              ${(p.highlights || []).map(h => `<li>${esc(h)}</li>`).join("")}
             </ul>
 
             <div class="card-actions">
-              <button class="btn btn-outline" onclick="openSkuModal('${p.id}')">View Specs</button>
-              <button class="btn btn-gold" onclick="addToTray('${p.name} (General)')">+ Inquire</button>
+              <button class="btn btn-outline" onclick="openSkuModal(${arg(p.id)})">View Specs</button>
+              <button class="btn btn-gold" onclick="addToTray(${arg(p.name+" (General)")})">+ Inquire</button>
             </div>
           </div>
         </div>
@@ -1181,9 +1004,9 @@
         <div class="card">
           <div>
             <span class="pill">PDF Catalog</span>
-            <h3 style="margin-top:0.6rem;">${pdf.title}</h3>
+            <h3 style="margin-top:0.6rem;">${esc(pdf.title)}</h3>
           </div>
-          <a href="${pdf.url}" target="_blank" class="btn btn-outline" style="width:fit-content;">Open / Download</a>
+          <a href="${safeUrl(pdf.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="width:fit-content;">Open / Download</a>
         </div>
       `).join("");
     }
@@ -1197,12 +1020,12 @@
       document.getElementById("modalDesc").textContent = p.desc;
       document.getElementById("modalTableBody").innerHTML = p.skus.map(s => `
         <tr>
-          <td><strong>${s.code}</strong></td>
-          <td>${s.size}</td>
-          <td>${s.mat}</td>
-          <td>${s.spec}</td>
-          <td>${s.qty}</td>
-          <td><button class="btn btn-gold" style="padding:0.35rem 0.7rem; font-size:0.76rem;" onclick="addToTray('${s.code} - ${p.name} (${s.size})')">+ Add</button></td>
+          <td><strong>${esc(s.code)}</strong></td>
+          <td>${esc(s.size)}</td>
+          <td>${esc(s.mat)}</td>
+          <td>${esc(s.spec)}</td>
+          <td>${esc(s.qty)}</td>
+          <td><button class="btn btn-gold" style="padding:0.35rem 0.7rem; font-size:0.76rem;" onclick="addToTray(${arg(s.code+" - "+p.name+" ("+s.size+")")})">+ Add</button></td>
         </tr>
       `).join("");
       document.getElementById("skuModal").classList.add("open");
@@ -1241,8 +1064,7 @@
 
     function buildInquiryPayload() {
       return {
-        id: Date.now(),
-        date: new Date().toLocaleString(),
+        
         name: document.getElementById("inqName").value.trim(),
         company: document.getElementById("inqCompany").value.trim(),
         email: document.getElementById("inqEmail").value.trim(),
@@ -1252,30 +1074,28 @@
       };
     }
 
-    document.getElementById("inquiryForm").addEventListener("submit", e => {
+    document.getElementById("inquiryForm").addEventListener("submit", async e => {
       e.preventDefault();
       const data = buildInquiryPayload();
-      inquiries.unshift(data);
-      saveState();
+      try { await query(sb.from("inquiries").insert(data)); } catch(err) { alert("Inquiry not saved: "+err.message); return; }
 
       const msg = encodeURIComponent(
         `Hello AQMS ,\n\nNew B2B Product Inquiry:\n` +
         `Name: ${data.name}\nCompany: ${data.company}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n` +
         `Requested Items:\n- ${data.items.join("\n- ")}\n\nNotes: ${data.notes || "N/A"}`
       );
-      window.open(`https://wa.me/${OWNER_WHATSAPP}?text=${msg}`, "_blank");
+      window.location.href = `https://wa.me/${OWNER_WHATSAPP}?text=${msg}`;
       tray = [];
       document.getElementById("trayCount").textContent = "0";
       e.target.reset();
       closeModal("trayModal");
     });
 
-    function submitEmailInquiry() {
+    async function submitEmailInquiry() {
       const form = document.getElementById("inquiryForm");
       if (!form.reportValidity()) return;
       const data = buildInquiryPayload();
-      inquiries.unshift(data);
-      saveState();
+      try { await query(sb.from("inquiries").insert(data)); } catch(err) { alert("Inquiry not saved: "+err.message); return; }
 
       const subject = encodeURIComponent(`B2B Inquiry from ${data.company}`);
       const body = encodeURIComponent(
@@ -1288,82 +1108,25 @@
     //                                         --- Owner Backend ---
 
 
-    function openAdmin() {
-      document.getElementById("adminModal").classList.add("open");
-      renderInquiries();
-    }
-
-    function loginAdmin() {
-      if (document.getElementById("adminPass").value === ADMIN_PASSCODE) {
-        document.getElementById("adminLogin").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-        renderInquiries();
-      } else {
-        alert("Incorrect passcode.");
-      }
-    }
-
-    function switchAdminTab(tabId, btn) {
-      ["inqTab", "addProdTab", "addPdfTab"].forEach(id => {
-        document.getElementById(id).style.display = id === tabId ? (id === "inqTab" ? "block" : "grid") : "none";
-      });
-      btn.parentElement.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      btn.classList.add("active");
-    }
-
-    function renderInquiries() {
-      const el = document.getElementById("inqTab");
-      if (!inquiries.length) {
-        el.innerHTML = `<p style="color:var(--muted);">No inquiries logged yet.</p>`;
-        return;
-      }
-      el.innerHTML = inquiries.map(inq => `
-        <div class="info-box" style="margin-bottom:0.85rem; padding:1rem;">
-          <div style="display:flex; justify-content:space-between; font-size:0.82rem; color:var(--gold-light);">
-            <strong>${inq.company} (${inq.name})</strong>
-            <span>${inq.date}</span>
-          </div>
-          <p style="font-size:0.84rem; color:var(--muted); margin:0.35rem 0;">${inq.email} • ${inq.phone}</p>
-          <p style="font-size:0.85rem;"><strong>Items:</strong> ${inq.items.join(", ")}</p>
-          ${inq.notes ? `<p style="font-size:0.82rem; color:var(--muted); margin-top:0.25rem;">Notes: ${inq.notes}</p>` : ""}
-        </div>
-      `).join("");
-    }
-
-    function addNewProduct(e) {
-      e.preventDefault();
-      const lines = document.getElementById("pSkus").value.trim().split("\n");
-      const skus = lines.map(l => {
-        const [code, size, mat, spec, qty] = l.split("|").map(s => (s || "").trim());
-        return { code: code || "SKU", size: size || "-", mat: mat || "-", spec: spec || "-", qty: qty || "-" };
-      });
-      products.unshift({
-        id: "custom-" + Date.now(),
-        name: document.getElementById("pName").value.trim(),
-        category: document.getElementById("pCat").value.trim(),
-        desc: document.getElementById("pDesc").value.trim(),
-        highlights: ["Newly Added", `${skus.length} SKUs`],
-        skus
-      });
-      saveState();
-      renderTabs();
-      renderProducts();
-      e.target.reset();
-      alert("Product published to catalog!");
-    }
-
-    function addNewPdf(e) {
-      e.preventDefault();
-      pdfs.unshift({
-        title: document.getElementById("pdfTitle").value.trim(),
-        url: document.getElementById("pdfUrl").value.trim()
-      });
-      saveState();
-      renderPdfs();
-      e.target.reset();
-      alert("Catalog link published!");
-    }
-
+    let adminTab='inqTab', editId=null, adminRows=[];
+    async function owner(){const {data:{user}}=await sb.auth.getUser();return !!user && !!(await query(sb.from('website_owners').select('user_id').eq('user_id',user.id).maybeSingle()));}
+    async function requireOwner(){if(!await owner())throw Error('Owner login required');}
+    function status(msg){$('adminStatus').textContent=msg;}
+    async function openAdmin(){ $('adminModal').classList.add('open');try{await syncAdmin();}catch(e){alert(e.message);} }
+    async function syncAdmin(){const ok=await owner();$('adminLogin').style.display=ok?'none':'grid';$('adminPanel').style.display=ok?'block':'none';if(ok)await refreshAdmin();else {$('inqTab').replaceChildren();$('manageList').replaceChildren();adminRows=[];}}
+    async function loginAdmin(e){e.preventDefault();try{await query(sb.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPass').value}));if(!await owner()){await sb.auth.signOut();throw Error('Not an authorized owner');}await syncAdmin();}catch(e){alert(e.message);}finally{$('adminPass').value='';}}
+    async function logoutAdmin(){try{await query(sb.auth.signOut());resetEdit();await syncAdmin();}catch(e){alert(e.message);}}
+    function resetEdit(){editId=null;['addProdTab','addPdfTab','offersTab'].forEach(id=>$(id).reset());}
+    function switchAdminTab(id,btn){adminTab=id;resetEdit();['inqTab','addProdTab','addPdfTab','offersTab'].forEach(x=>$(x).style.display=x===id?(x==='inqTab'?'block':'grid'):'none');btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===btn));refreshAdmin().catch(e=>status(e.message));}
+    const tableFor=()=>({addProdTab:'products',addPdfTab:'pdf_catalogs',offersTab:'offers',inqTab:'inquiries'}[adminTab]);
+    async function refreshAdmin(){await requireOwner();const tab=adminTab;const rows=await query(sb.from(tableFor()).select('*').order('created_at',{ascending:false}));if(tab!==adminTab)return;adminRows=rows;const list=$('manageList');list.replaceChildren();$('inqTab').replaceChildren();const dest=tab==='inqTab'?$('inqTab'):list;for(const r of rows){const box=document.createElement('div');box.className='info-box';box.style.margin='12px 0';const p=document.createElement('p');p.textContent=tab==='inqTab'?`${r.company} | ${r.name} | ${r.email} | ${r.phone} | ${r.items.join(', ')} | ${r.notes||''} | ${r.status}`:r.name||r.title;box.append(p);if(tab!=='inqTab'){const edit=document.createElement('button');edit.type='button';edit.className='btn btn-outline';edit.textContent='Edit';edit.onclick=()=>editRow(r);box.append(edit);}else{const done=document.createElement('button');done.className='btn btn-outline';done.textContent='Mark reviewed';done.onclick=async()=>{try{await requireOwner();await query(sb.from('inquiries').update({status:'Reviewed'}).eq('id',r.id).select('id').single());await refreshAdmin();}catch(e){status(e.message);}};box.append(done);}const del=document.createElement('button');del.type='button';del.className='btn btn-outline';del.textContent='Delete';del.onclick=async()=>{if(!confirm('Delete this record?'))return;try{await requireOwner();await query(sb.from(tableFor()).delete().eq('id',r.id).select('id').single());resetEdit();await refreshAll();}catch(e){status(e.message);}};box.append(del);dest.append(box);}if(!rows.length)dest.textContent='No records yet.';}
+    function editRow(r){resetEdit();editId=r.id;if(adminTab==='addProdTab'){$('pName').value=r.name;$('pCat').value=r.category;$('pDesc').value=r.desc;$('pSkus').value=r.skus.map(s=>[s.code,s.size,s.mat,s.spec,s.qty].join(' | ')).join('\n');}else if(adminTab==='addPdfTab'){$('pdfTitle').value=r.title;$('pdfUrl').value=r.url;}else{$('oTitle').value=r.title;$('oBadge').value=r.badge||'';$('oDesc').value=r.description||'';$('oEnd').value=r.ends_on||'';$('oUrl').value=r.image_url||'';}status('Editing '+(r.name||r.title));}
+    async function upload(id,folder){const f=$(id).files[0];if(!f)return null;if(f.size>20*1024*1024)throw Error('File exceeds 20 MB');const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','application/pdf':'pdf'})[f.type];if(!ext|| (folder==='catalogs')!==(ext==='pdf'))throw Error('Unsupported file type');const path=folder+'/'+crypto.randomUUID()+'.'+ext;await query(sb.storage.from('website-media').upload(path,f));return sb.storage.from('website-media').getPublicUrl(path).data.publicUrl;}
+    async function refreshAll(){await loadCatalog();await renderOffers();await refreshAdmin();}
+    async function saveRecord(e,build){e.preventDefault();const btn=e.submitter;if(btn)btn.disabled=true;try{await requireOwner();const table=tableFor(),id=editId;const payload=await build();await query((id?sb.from(table).update(payload).eq('id',id):sb.from(table).insert(payload)).select('id').single());resetEdit();status('Saved successfully');await refreshAll();}catch(e){status(e.message);}finally{if(btn)btn.disabled=false;}}
+    function addNewProduct(e){return saveRecord(e,async()=>{const old=adminRows.find(r=>r.id===editId);const skus=$('pSkus').value.trim().split('\n').filter(Boolean).map(l=>{const [code,size,mat,spec,qty]=l.split('|').map(x=>x.trim());return {code:code||'SKU',size:size||'-',mat:mat||'-',spec:spec||'-',qty:qty||'-'};});return {name:$('pName').value.trim(),category:$('pCat').value.trim(),desc:$('pDesc').value.trim(),skus,highlights:old?.highlights||[],image:await upload('pFile','products')||old?.image||null};});}
+    function addNewPdf(e){return saveRecord(e,async()=>{const url=await upload('pdfFile','catalogs')||$('pdfUrl').value.trim();if(!url||!safeUrl(url))throw Error('Provide a PDF or HTTPS link');return {title:$('pdfTitle').value.trim(),url};});}
+    function saveOffer(e){return saveRecord(e,async()=>{const url=await upload('oFile','offers')||$('oUrl').value.trim();if(url&&!safeUrl(url))throw Error('Use HTTPS image URL');return {title:$('oTitle').value.trim(),badge:$('oBadge').value.trim()||'ANNOUNCEMENT',description:$('oDesc').value.trim(),ends_on:$('oEnd').value||null,image_url:url||null};});}
     function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
     // --- Scroll Reveal & Counters ---
@@ -1401,7 +1164,9 @@ navEl.querySelectorAll("a").forEach(link => {
 
 
         // --- Offers slider (data comes from Supabase) ---
+    let stopOffers=()=>{};
     async function renderOffers() {
+      stopOffers();
       const section = document.getElementById("offers");
 
       let rows;
@@ -1416,14 +1181,14 @@ navEl.querySelectorAll("a").forEach(link => {
         return;
       }
 
-      const today = new Date().toISOString().slice(0, 10);
+      const today = new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
       const active = rows.filter(o => !o.ends_on || o.ends_on >= today);
-      if (!active.length) return;
+      if (!active.length) {section.hidden=true;$("offerTrack").replaceChildren();$("offerDots").replaceChildren();return;}
       section.hidden = false;
 
       document.getElementById("offerTrack").innerHTML = active.map((o, i) => `
         <article class="offer-slide ${i === 0 ? "active" : ""} ${o.image_url ? "" : "no-img"}">
-          ${o.image_url ? `<img class="offer-img" src="${esc(o.image_url)}" alt="${esc(o.title)}">` : ""}
+          ${o.image_url ? `<img class="offer-img" src="${safeUrl(o.image_url)}" alt="${esc(o.title)}">` : ""}
           <div class="offer-body">
             ${o.badge ? `<span class="offer-badge">${esc(o.badge)}</span>` : ""}
             <h3>${esc(o.title)}</h3>
@@ -1455,14 +1220,13 @@ navEl.querySelectorAll("a").forEach(link => {
       }
       function start() {
         if (slides.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        timer = setInterval(() => show(current + 1), 6000);
+        clearInterval(timer); timer = setInterval(() => show(current + 1), 6000);
       }
       function stop() { clearInterval(timer); }
 
       dotEls.forEach(d => d.addEventListener("click", () => { stop(); show(+d.dataset.i); start(); }));
       const slider = document.getElementById("offerSlider");
-      slider.addEventListener("mouseenter", stop);
-      slider.addEventListener("mouseleave", start);
+      slider.onmouseenter=stop; slider.onmouseleave=start; stopOffers=()=>{stop();slider.onmouseenter=null;slider.onmouseleave=null;};
       start();
     }
 
@@ -1470,9 +1234,7 @@ navEl.querySelectorAll("a").forEach(link => {
     // --- Init ---
     document.getElementById("year").textContent = new Date().getFullYear();
     document.getElementById("searchInput").addEventListener("input", renderProducts);
-    renderTabs();
-    renderProducts();
-    renderPdfs();
+    loadCatalog().catch(e=>{$("productGrid").textContent="Catalog unavailable: "+e.message;});
     renderOffers();
 
   </script>
