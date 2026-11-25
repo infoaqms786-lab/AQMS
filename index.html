@@ -695,9 +695,16 @@
     .card-image-missing { display:grid; place-items:center; aspect-ratio:4/3; background:var(--surface-2); border-radius:12px; color:var(--muted); text-align:center; padding:1rem; }
     @media(max-width:768px) { .offer-slide { grid-template-columns:minmax(0,1fr); grid-template-rows:auto 1fr; min-height:0; } .offer-img { height:220px; } .offer-body { padding:1.25rem; } }
 
+
+    /* Always accessible owner entry, independent of the mobile menu. */
+    .footer-owner-access { display: inline-flex; margin: .65rem auto 0; min-height: 44px; align-items: center; justify-content: center; }
+    @media (max-width: 768px) {
+      header nav.open button.mobile-owner { display: inline-flex !important; min-height: 44px; }
+    }
 </style>
 
 
+<!-- AQMS mobile owner access revision 2 -->
 </head>
 <body>
   
@@ -840,6 +847,7 @@
   <footer>
     &copy; <span id="year"></span> AQMS — All Rights Reserved. |
     <a href="https://www.AQMS.com" target="_blank" rel="noopener noreferrer">www.AQMS.com</a>
+    <div><button type="button" class="btn btn-outline footer-owner-access" onclick="openAdmin()">Owner Backend</button></div>
   </footer>
 
   <!-- SKU Details Modal -->
