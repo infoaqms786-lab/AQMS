@@ -1157,21 +1157,30 @@
       if(ok){await loadMyRole();await refreshAdmin();}
       else{$('inqTab').replaceChildren();$('manageList').replaceChildren();adminRows=[];}
     }
-    async function loginAdmin(e){
-      e.preventDefault();
+        async function loginAdmin(e){
+          e.preventDefault();
+          try{
+            const id=$('adminId').value.trim().toLowerCase();
+            if(!/^[a-z0-9._-]{3,30}$/.test(id)) throw Error('Invalid login ID or password');
+            await query(sb.auth.signInWithPassword({email:idToEmail(id),password:$('adminPass').value}));
+            if(!await owner()){
+              await sb.auth.signOut();throw Error('Not an authorized owner');
+            }
+            await syncAdmin();
+          }
+          catch(err){alert(/invalid login/i.test(err.message)?'Invalid login ID or password':err.message);}
+          finally{$('adminPass').value='';}
+        }async function logoutAdmin(){
       try{
-        const id=$('adminId').value.trim().toLowerCase();
-        if(!/^[a-z0-9._-]{3,30}$/.test(id)) throw Error('Invalid login ID or password');
-        await query(sb.auth.signInWithPassword({email:idToEmail(id),password:$('adminPass').value}));
-        if(!await owner()){
-          await sb.auth.signOut();throw Error('Not an authorized owner');
-        }
+        await query(sb.auth.signOut());
+        resetEdit();
+        adminTab='inqTab';
+        ['inqTab','addProdTab','addPdfTab','offersTab','ownersTab'].forEach(x=>$(x).style.display=x==='inqTab'?'block':'none');
+        document.querySelectorAll('#adminPanel .tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+        $('ownersTabBtn').style.display='none';
         await syncAdmin();
-      }
-      catch(err){alert(/invalid login/i.test(err.message)?'Invalid login ID or password':err.message);}
-      finally{$('adminPass').value='';}
+      }catch(e){alert(e.message);}
     }
-    async function logoutAdmin(){try{await query(sb.auth.signOut());resetEdit();await syncAdmin();}catch(e){alert(e.message);}}
     function resetEdit(){editId=null;['addProdTab','addPdfTab','offersTab'].forEach(id=>$(id).reset());}
     function switchAdminTab(id,btn){adminTab=id;resetEdit();['inqTab','addProdTab','addPdfTab','offersTab','ownersTab'].forEach(x=>$(x).style.display=x===id?(x==='inqTab'||x==='ownersTab'?'block':'grid'):'none');btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===btn));refreshAdmin().catch(e=>status(e.message));}    const tableFor=()=>({addProdTab:'products',addPdfTab:'pdf_catalogs',offersTab:'offers',inqTab:'inquiries'}[adminTab]);
     async function refreshAdmin(){await requireOwner();if(adminTab==='ownersTab'){$('manageList').replaceChildren();return refreshOwners();}const tab=adminTab;const rows=await query(sb.from(tableFor()).select('*').order('created_at',{ascending:false}));if(tab!==adminTab)return;adminRows=rows;const list=$('manageList');list.replaceChildren();$('inqTab').replaceChildren();const dest=tab==='inqTab'?$('inqTab'):list;for(const r of rows){const box=document.createElement('div');box.className='info-box';box.style.margin='12px 0';const p=document.createElement('p');p.textContent=tab==='inqTab'?`${r.company} | ${r.name} | ${r.email} | ${r.phone} | ${r.items.join(', ')} | ${r.notes||''} | ${r.status}`:r.name||r.title;box.append(p);if(tab!=='inqTab'){const edit=document.createElement('button');edit.type='button';edit.className='btn btn-outline';edit.textContent='Edit';edit.onclick=()=>editRow(r);box.append(edit);}else{const done=document.createElement('button');done.className='btn btn-outline';done.textContent='Mark reviewed';done.onclick=async()=>{try{await requireOwner();await query(sb.from('inquiries').update({status:'Reviewed'}).eq('id',r.id).select('id').single());await refreshAdmin();}catch(e){status(e.message);}};box.append(done);}const del=document.createElement('button');del.type='button';del.className='btn btn-outline';del.textContent='Delete';del.onclick=async()=>{if(!confirm('Delete this record?'))return;try{await requireOwner();await query(sb.from(tableFor()).delete().eq('id',r.id).select('id').single());resetEdit();await refreshAll();}catch(e){status(e.message);}};box.append(del);dest.append(box);}if(!rows.length)dest.textContent='No records yet.';}
