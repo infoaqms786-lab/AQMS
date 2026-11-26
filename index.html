@@ -1184,6 +1184,77 @@
     function saveOffer(e){return saveRecord(e,async()=>{const url=await upload('oFile','offers')||$('oUrl').value.trim();if(url&&!safeUrl(url))throw Error('Use HTTPS image URL');return {title:$('oTitle').value.trim(),badge:$('oBadge').value.trim()||'ANNOUNCEMENT',description:$('oDesc').value.trim(),ends_on:$('oEnd').value||null,image_url:url||null};});}
     function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
+
+        // --- Manage logins (admin only) ---
+    let myLogin='';
+    async function loadMyRole(){
+      const {data:{user}}=await sb.auth.getUser();
+      const row=await query(sb.from('website_owners').select('role,login_id').eq('user_id',user.id).maybeSingle());
+      myLogin=row?.login_id||'';
+      $('ownersTabBtn').style.display=row?.role==='admin'?'':'none';
+    }
+    
+    async function ownersCall(body){
+      const {data,error}=await sb.functions.invoke('owner-admin',{body});
+      if(error){
+        let msg=error.message;
+        try{const j=await error.context.json();if(j?.error)msg=j.error;}catch{}
+        throw Error(msg);
+      }
+      if(data?.error)throw Error(data.error);
+      return data;
+    }
+    
+    async function refreshOwners(){
+      const {owners}=await ownersCall({action:'list'});
+      const box=$('ownersList');box.replaceChildren();
+      for(const o of owners){
+        const card=document.createElement('div');
+        card.className='info-box';card.style.margin='12px 0';
+        const p=document.createElement('p');
+        p.textContent=`${o.login_id||'(no login ID, old account)'}  ·  ${o.role}${o.login_id&&o.login_id===myLogin?'  (you)':''}`;
+        card.append(p);
+        const add=(label,fn)=>{
+          const b=document.createElement('button');
+          b.type='button';b.className='btn btn-outline';b.style.margin='0 8px 8px 0';b.textContent=label;
+          b.onclick=async()=>{try{await fn();}catch(err){status(err.message);}};
+          card.append(b);
+        };
+        add('Change password',async()=>{
+          const pw=prompt('New password for '+(o.login_id||'this login')+' (min 10 characters):');
+          if(!pw)return;
+          await ownersCall({action:'set_password',user_id:o.user_id,password:pw});
+          status('Password changed');
+        });
+        add('Rename ID',async()=>{
+          const id=prompt('New login ID:',o.login_id||'');
+          if(!id||id===o.login_id)return;
+          await ownersCall({action:'rename',user_id:o.user_id,login_id:id});
+          status('Login ID changed');await loadMyRole();await refreshOwners();
+        });
+        add(o.role==='admin'?'Make editor':'Make admin',async()=>{
+          await ownersCall({action:'set_role',user_id:o.user_id,role:o.role==='admin'?'editor':'admin'});
+          await loadMyRole();await refreshOwners();
+        });
+        add('Delete',async()=>{
+          if(!confirm('Delete login '+(o.login_id||'(old account)')+'?'))return;
+          await ownersCall({action:'delete',user_id:o.user_id});
+          await refreshOwners();
+        });
+        box.append(card);
+      }
+    }
+    
+    async function createOwner(e){
+      e.preventDefault();
+      const btn=e.submitter;if(btn)btn.disabled=true;
+      try{
+        await ownersCall({action:'create',login_id:$('nId').value.trim().toLowerCase(),password:$('nPass').value,role:$('nRole').value});
+        e.target.reset();status('Login created');await refreshOwners();
+      }catch(err){status(err.message);}
+      finally{if(btn)btn.disabled=false;}
+    }
+
     // --- Scroll Reveal & Counters ---
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
