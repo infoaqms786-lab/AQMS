@@ -908,7 +908,7 @@
       </div>
 
       <form id="adminLogin" class="form-grid" onsubmit="loginAdmin(event)">
-<input id="adminEmail" type="email" placeholder="Owner email" required autocomplete="username">
+<input id="adminId" type="text" placeholder="Login ID" required autocomplete="username" autocapitalize="none" spellcheck="false">
 <input id="adminPass" type="password" placeholder="Password" required autocomplete="current-password">
 <button class="btn btn-gold">Sign in</button></form>
       <div id="adminPanel" style="display:none;"><button class="btn btn-outline" onclick="logoutAdmin()">Logout</button>
@@ -916,6 +916,7 @@
           <button class="tab active" onclick="switchAdminTab('inqTab', this)">Inquiries</button>
           <button class="tab" onclick="switchAdminTab('addProdTab', this)">+ Add Product</button>
           <button class="tab" onclick="switchAdminTab('addPdfTab', this)">Manage PDF Catalogs</button><button class="tab" onclick="switchAdminTab('offersTab', this)">Manage Offers</button>
+          <button class="tab" id="ownersTabBtn" style="display:none" onclick="switchAdminTab('ownersTab', this)">Manage Logins</button>
         </div>
 
         <div id="inqTab"></div>
@@ -937,7 +938,19 @@
         </form>
         <form id="offersTab" class="form-grid" style="display:none" onsubmit="saveOffer(event)">
 <input id="oTitle" placeholder="Offer title" required><input id="oBadge" placeholder="Badge"><textarea id="oDesc" placeholder="Description"></textarea><label>Expiry (optional)<input id="oEnd" type="date"></label><input id="oUrl" type="url" placeholder="Image URL (optional)"><input id="oFile" type="file" accept="image/jpeg,image/png,image/webp"><button class="btn btn-gold">Save Offer</button></form>
-<div id="manageList"></div><p id="adminStatus" role="status"></p>
+<div id="ownersTab" style="display:none;">
+  <form class="form-grid" onsubmit="createOwner(event)">
+    <input id="nId" placeholder="New login ID (3-30: letters, numbers . _ -)" required pattern="[a-zA-Z0-9._\-]{3,30}" autocapitalize="none">
+    <input id="nPass" type="password" placeholder="Password (min 10 characters)" required minlength="10" autocomplete="new-password">
+    <select id="nRole">
+      <option value="editor">Editor (offers, products, inquiries)</option>
+      <option value="admin">Admin (also manages logins)</option>
+    </select>
+    <button class="btn btn-gold">Create login</button>
+  </form>
+  <div id="ownersList"></div>
+</div>
+        <div id="manageList"></div><p id="adminStatus" role="status"></p>
       </div>
     </div>
   </div>
@@ -948,6 +961,9 @@
     // --- Configuration ---
     const OWNER_WHATSAPP = "919664143828";
     const OWNER_EMAIL = "infoaqms786@gmail.com";
+    const LOGIN_EMAIL_BASE = "infoaqms786";   // must match the Edge Function
+    const LOGIN_EMAIL_DOMAIN = "gmail.com";
+    const idToEmail = id => `${LOGIN_EMAIL_BASE}+${id}@${LOGIN_EMAIL_DOMAIN}`;
     
 
 
@@ -1134,13 +1150,31 @@
     async function requireOwner(){if(!await owner())throw Error('Owner login required');}
     function status(msg){$('adminStatus').textContent=msg;}
     async function openAdmin(){ $('adminModal').classList.add('open');try{await syncAdmin();}catch(e){alert(e.message);} }
-    async function syncAdmin(){const ok=await owner();$('adminLogin').style.display=ok?'none':'grid';$('adminPanel').style.display=ok?'block':'none';if(ok)await refreshAdmin();else {$('inqTab').replaceChildren();$('manageList').replaceChildren();adminRows=[];}}
-    async function loginAdmin(e){e.preventDefault();try{await query(sb.auth.signInWithPassword({email:$('adminEmail').value.trim(),password:$('adminPass').value}));if(!await owner()){await sb.auth.signOut();throw Error('Not an authorized owner');}await syncAdmin();}catch(e){alert(e.message);}finally{$('adminPass').value='';}}
+    async function syncAdmin(){
+      const ok=await owner();
+      $('adminLogin').style.display=ok?'none':'grid';
+      $('adminPanel').style.display=ok?'block':'none';
+      if(ok){await loadMyRole();await refreshAdmin();}
+      else{$('inqTab').replaceChildren();$('manageList').replaceChildren();adminRows=[];}
+    }
+    async function loginAdmin(e){
+      e.preventDefault();
+      try{
+        const id=$('adminId').value.trim().toLowerCase();
+        if(!/^[a-z0-9._-]{3,30}$/.test(id)) throw Error('Invalid login ID or password');
+        await query(sb.auth.signInWithPassword({email:idToEmail(id),password:$('adminPass').value}));
+        if(!await owner()){
+          await sb.auth.signOut();throw Error('Not an authorized owner');
+        }
+        await syncAdmin();
+      }
+      catch(err){alert(/invalid login/i.test(err.message)?'Invalid login ID or password':err.message);}
+      finally{$('adminPass').value='';}
+    }
     async function logoutAdmin(){try{await query(sb.auth.signOut());resetEdit();await syncAdmin();}catch(e){alert(e.message);}}
     function resetEdit(){editId=null;['addProdTab','addPdfTab','offersTab'].forEach(id=>$(id).reset());}
-    function switchAdminTab(id,btn){adminTab=id;resetEdit();['inqTab','addProdTab','addPdfTab','offersTab'].forEach(x=>$(x).style.display=x===id?(x==='inqTab'?'block':'grid'):'none');btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===btn));refreshAdmin().catch(e=>status(e.message));}
-    const tableFor=()=>({addProdTab:'products',addPdfTab:'pdf_catalogs',offersTab:'offers',inqTab:'inquiries'}[adminTab]);
-    async function refreshAdmin(){await requireOwner();const tab=adminTab;const rows=await query(sb.from(tableFor()).select('*').order('created_at',{ascending:false}));if(tab!==adminTab)return;adminRows=rows;const list=$('manageList');list.replaceChildren();$('inqTab').replaceChildren();const dest=tab==='inqTab'?$('inqTab'):list;for(const r of rows){const box=document.createElement('div');box.className='info-box';box.style.margin='12px 0';const p=document.createElement('p');p.textContent=tab==='inqTab'?`${r.company} | ${r.name} | ${r.email} | ${r.phone} | ${r.items.join(', ')} | ${r.notes||''} | ${r.status}`:r.name||r.title;box.append(p);if(tab!=='inqTab'){const edit=document.createElement('button');edit.type='button';edit.className='btn btn-outline';edit.textContent='Edit';edit.onclick=()=>editRow(r);box.append(edit);}else{const done=document.createElement('button');done.className='btn btn-outline';done.textContent='Mark reviewed';done.onclick=async()=>{try{await requireOwner();await query(sb.from('inquiries').update({status:'Reviewed'}).eq('id',r.id).select('id').single());await refreshAdmin();}catch(e){status(e.message);}};box.append(done);}const del=document.createElement('button');del.type='button';del.className='btn btn-outline';del.textContent='Delete';del.onclick=async()=>{if(!confirm('Delete this record?'))return;try{await requireOwner();await query(sb.from(tableFor()).delete().eq('id',r.id).select('id').single());resetEdit();await refreshAll();}catch(e){status(e.message);}};box.append(del);dest.append(box);}if(!rows.length)dest.textContent='No records yet.';}
+    function switchAdminTab(id,btn){adminTab=id;resetEdit();['inqTab','addProdTab','addPdfTab','offersTab','ownersTab'].forEach(x=>$(x).style.display=x===id?(x==='inqTab'||x==='ownersTab'?'block':'grid'):'none');btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===btn));refreshAdmin().catch(e=>status(e.message));}    const tableFor=()=>({addProdTab:'products',addPdfTab:'pdf_catalogs',offersTab:'offers',inqTab:'inquiries'}[adminTab]);
+    async function refreshAdmin(){await requireOwner();if(adminTab==='ownersTab'){$('manageList').replaceChildren();return refreshOwners();}const tab=adminTab;const rows=await query(sb.from(tableFor()).select('*').order('created_at',{ascending:false}));if(tab!==adminTab)return;adminRows=rows;const list=$('manageList');list.replaceChildren();$('inqTab').replaceChildren();const dest=tab==='inqTab'?$('inqTab'):list;for(const r of rows){const box=document.createElement('div');box.className='info-box';box.style.margin='12px 0';const p=document.createElement('p');p.textContent=tab==='inqTab'?`${r.company} | ${r.name} | ${r.email} | ${r.phone} | ${r.items.join(', ')} | ${r.notes||''} | ${r.status}`:r.name||r.title;box.append(p);if(tab!=='inqTab'){const edit=document.createElement('button');edit.type='button';edit.className='btn btn-outline';edit.textContent='Edit';edit.onclick=()=>editRow(r);box.append(edit);}else{const done=document.createElement('button');done.className='btn btn-outline';done.textContent='Mark reviewed';done.onclick=async()=>{try{await requireOwner();await query(sb.from('inquiries').update({status:'Reviewed'}).eq('id',r.id).select('id').single());await refreshAdmin();}catch(e){status(e.message);}};box.append(done);}const del=document.createElement('button');del.type='button';del.className='btn btn-outline';del.textContent='Delete';del.onclick=async()=>{if(!confirm('Delete this record?'))return;try{await requireOwner();await query(sb.from(tableFor()).delete().eq('id',r.id).select('id').single());resetEdit();await refreshAll();}catch(e){status(e.message);}};box.append(del);dest.append(box);}if(!rows.length)dest.textContent='No records yet.';}
     function editRow(r){resetEdit();editId=r.id;if(adminTab==='addProdTab'){$('pName').value=r.name;$('pCat').value=r.category;$('pDesc').value=r.desc;$('pSkus').value=r.skus.map(s=>[s.code,s.size,s.mat,s.spec,s.qty].join(' | ')).join('\n');}else if(adminTab==='addPdfTab'){$('pdfTitle').value=r.title;$('pdfUrl').value=r.url;}else{$('oTitle').value=r.title;$('oBadge').value=r.badge||'';$('oDesc').value=r.description||'';$('oEnd').value=r.ends_on||'';$('oUrl').value=r.image_url||'';}status('Editing '+(r.name||r.title));}
     async function upload(id,folder){const f=$(id).files[0];if(!f)return null;if(f.size>20*1024*1024)throw Error('File exceeds 20 MB');const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','application/pdf':'pdf'})[f.type];if(!ext|| (folder==='catalogs')!==(ext==='pdf'))throw Error('Unsupported file type');const path=folder+'/'+crypto.randomUUID()+'.'+ext;await query(sb.storage.from('website-media').upload(path,f));return sb.storage.from('website-media').getPublicUrl(path).data.publicUrl;}
     async function refreshAll(){await loadCatalog();await renderOffers();await refreshAdmin();}
