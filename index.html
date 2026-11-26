@@ -695,6 +695,34 @@
     .card-image-missing { display:grid; place-items:center; aspect-ratio:4/3; background:var(--surface-2); border-radius:12px; color:var(--muted); text-align:center; padding:1rem; }
     @media(max-width:768px) { .offer-slide { grid-template-columns:minmax(0,1fr); grid-template-rows:auto 1fr; min-height:0; } .offer-img { height:220px; } .offer-body { padding:1.25rem; } }
 
+    
+        /* Show/hide password */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 2.8rem; }
+    .pw-toggle {
+      position: absolute;
+      top: 50%;
+      right: 0.4rem;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .pw-toggle:hover { color: var(--gold-light); }
+    .pw-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .pw-toggle .ico-hide { display: none; }
+    .pw-toggle.on .ico-show { display: none; }
+    .pw-toggle.on .ico-hide { display: block; }
+    
+    /* Edge adds its own eye. Hide it so only ours shows. */
+    input::-ms-reveal, input::-ms-clear { display: none; }
+
 </style>
 
 
@@ -909,7 +937,13 @@
 
       <form id="adminLogin" class="form-grid" onsubmit="loginAdmin(event)">
 <input id="adminId" type="text" placeholder="Login ID" required autocomplete="username" autocapitalize="none" spellcheck="false">
-<input id="adminPass" type="password" placeholder="Password" required autocomplete="current-password">
+<div class="pw-wrap">
+  <input id="adminPass" type="password" placeholder="Password" required autocomplete="current-password">
+  <button type="button" class="pw-toggle" aria-label="Show password" aria-pressed="false">
+    <svg class="ico-show" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    <svg class="ico-hide" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+  </button>
+</div>
 <button class="btn btn-gold">Sign in</button></form>
       <div id="adminPanel" style="display:none;"><button class="btn btn-outline" onclick="logoutAdmin()">Logout</button>
         <div class="tabs" style="margin-bottom:1.25rem;">
@@ -1191,7 +1225,7 @@
     function addNewProduct(e){return saveRecord(e,async()=>{const old=adminRows.find(r=>r.id===editId);const skus=$('pSkus').value.trim().split('\n').filter(Boolean).map(l=>{const [code,size,mat,spec,qty]=l.split('|').map(x=>x.trim());return {code:code||'SKU',size:size||'-',mat:mat||'-',spec:spec||'-',qty:qty||'-'};});return {name:$('pName').value.trim(),category:$('pCat').value.trim(),desc:$('pDesc').value.trim(),skus,highlights:old?.highlights||[],image:await upload('pFile','products')||old?.image||null};});}
     function addNewPdf(e){return saveRecord(e,async()=>{const url=await upload('pdfFile','catalogs')||$('pdfUrl').value.trim();if(!url||!safeUrl(url))throw Error('Provide a PDF or HTTPS link');return {title:$('pdfTitle').value.trim(),url};});}
     function saveOffer(e){return saveRecord(e,async()=>{const url=await upload('oFile','offers')||$('oUrl').value.trim();if(url&&!safeUrl(url))throw Error('Use HTTPS image URL');return {title:$('oTitle').value.trim(),badge:$('oBadge').value.trim()||'ANNOUNCEMENT',description:$('oDesc').value.trim(),ends_on:$('oEnd').value||null,image_url:url||null};});}
-    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); if (id === "adminModal") resetPwToggles(); }
 
 
         // --- Manage logins (admin only) ---
@@ -1380,6 +1414,30 @@ navEl.querySelectorAll("a, .mobile-owner").forEach(link => {
       slider.onmouseenter=stop; slider.onmouseleave=start; stopOffers=()=>{stop();controller.abort();track.classList.remove('dragging');slider.onmouseenter=null;slider.onmouseleave=null;};
       start();
     }
+
+      
+          // --- Show/hide password ---
+      document.addEventListener('click', e => {
+        const btn = e.target.closest('.pw-toggle');
+        if (!btn) return;
+        const input = btn.parentElement.querySelector('input');
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.classList.toggle('on', show);
+        btn.setAttribute('aria-pressed', show);
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        input.focus();
+      });
+      
+      function resetPwToggles() {
+        document.querySelectorAll('.pw-wrap').forEach(w => {
+          w.querySelector('input').type = 'password';
+          const b = w.querySelector('.pw-toggle');
+          b.classList.remove('on');
+          b.setAttribute('aria-pressed', 'false');
+          b.setAttribute('aria-label', 'Show password');
+        });
+      }
 
 
     // --- Init ---
