@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AQMS | Admin Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+
+    
+    <!--Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <header class="admin-header">
+        <a href="index.html" class="brand">
+            AQ<span>MS</span>
+        </a>
+        <p>Admin Dashboard</p>
+    </header>
+
+    <div class="admin-login-wrapper" id="dashboardLogin">
+
+    <div class="card admin-login-card">
+
+        <span class="pill">Authorized Access</span>
+
+        <h2>Owner Login</h2>
+
+        <p>Sign in to manage your AQMS website.</p>
+
+        <form id="dashboardLoginForm">
+
+            <label for="adminId">Login ID</label>
+
+            <input
+                type="text"
+                id="adminId"
+                placeholder="Enter your Login ID"
+                autocomplete="username"
+                required
+            >
+
+            <label for="adminPass">Password</label>
+
+            <input
+                type="password"
+                id="adminPass"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit" class="btn btn-gold">
+                Login
+            </button>
+
+            <p id="loginStatus" role="status"></p>
+
+        </form>
+
+        <a href="index.html"
+           class="btn btn-outline">
+            Back to Website
+        </a>
+
+    </div>
+
+</div>
+
+    <div class="admin-layout" id="dashboardContent" hidden>
+
+    <aside class="admin-sidebar">
+
+        <h3>Management</h3>
+
+        <nav class="admin-nav">
+
+            <button class="btn btn-gold"
+                    data-section="overview">
+                Dashboard
+            </button>
+
+            <button class="btn btn-outline"
+                    data-section="products">
+                Products
+            </button>
+
+            <button class="btn btn-outline"
+                    data-section="inquiries">
+                Inquiries
+            </button>
+
+            <button class="btn btn-outline"
+                    data-section="catalogs">
+                PDF Catalogs
+            </button>
+
+            <button class="btn btn-outline"
+                    data-section="offers">
+                Offers
+            </button>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    data-section="logins"
+                    id="manageLoginsNav"
+                    hidden>
+                Manage Logins
+            </button>
+
+        </nav>
+
+        <div class="admin-sidebar-footer">
+            <a class="btn btn-outline"
+               href="index.html">
+                View Website
+            </a>
+
+            <button class="btn btn-outline" id="dashboardLogout">Logout</button>
+        </div>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <section class="dashboard-section" id="overviewSection">
+
+        <h2>Dashboard Overview</h2>
+        <p>Welcome to AQMS Administration.</p>
+
+        <div class="admin-stats">
+
+    <div class="card stat-card">
+        <h3>Total Products</h3>
+        <div class="stat-number" id="totalProducts">—</div>
+        <p>Product groups</p>
+    </div>
+
+    <div class="card stat-card">
+        <h3>Total Inquiries</h3>
+        <div class="stat-number" id="totalInquiries">—</div>
+        <p>Customer requests</p>
+    </div>
+
+    <div class="card stat-card">
+        <h3>PDF Catalogs</h3>
+        <div class="stat-number" id="totalCatalogs">—</div>
+        <p>Downloadable catalogs</p>
+    </div>
+
+    <div class="card stat-card">
+        <h3>Total Offers</h3>
+        <div class="stat-number" id="totalOffers">—</div>
+        <p>All Offer Records</p>
+    </div>
+
+</div>
+
+<div class="card recent-inquiries">
+
+    <h3>Recent Inquiries</h3>
+    <p>Latest customer requests</p>
+
+    <div class="admin-table-wrapper">
+
+        <table class="admin-table">
+
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="recentInquiries">
+                <tr>
+                    <td colspan="4">Loading inquiries...</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</section>
+
+<section class="dashboard-section"
+         id="productsSection" hidden>
+
+    <h2>Manage Products</h2>
+    <p>Add, edit and manage product listings.</p>
+
+    <div class="card product-form-card"
+     id="productFormCard" hidden>
+
+    <div class="management-toolbar">
+
+        <h3 id="productFormTitle">Add New Product</h3>
+
+        <button type="button"
+                class="btn btn-outline"
+                id="closeProductForm">
+            Close
+        </button>
+
+    </div>
+
+    <form id="dashboardProductForm">
+
+        <label for="productName">Product Name</label>
+
+        <input type="text"
+               id="productName"
+               placeholder="Enter product name"
+               required>
+
+        <label for="productCategory">Category</label>
+
+        <input type="text"
+               id="productCategory"
+               placeholder="Enter category"
+               required>
+
+        <label for="productDescription">Description</label>
+
+        <textarea id="productDescription"
+                  rows="4"
+                  placeholder="Enter product description"></textarea>
+
+        <!-- Product Highlights -->
+
+        <div class="product-field-group">
+
+            <h3>Product Highlights</h3>
+
+            <p>Add important features of the product.</p>
+
+            <div id="productHighlights"></div>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="addHighlightBtn">
+                + Add Highlight
+            </button>
+
+        </div>
+
+        <!-- SKU Variants -->
+
+        <div class="product-field-group">
+
+            <h3>SKU Variants</h3>
+
+            <p>Add available sizes, materials and packing details.</p>
+
+            <div id="productSkus"></div>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="addSkuBtn">
+                + Add SKU Variant
+            </button>
+
+        </div>
+
+        <label for="productImage">Product Image</label>
+
+        <input type="file"
+               id="productImage"
+               accept="image/jpeg,image/png,image/webp">
+
+        <div id="productImagePreview" hidden>
+
+            <img id="previewImage"
+                 alt="Product image preview">
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="removeProductImage">
+                Remove Image
+            </button>
+
+        </div>
+
+        <p id="productFormStatus" role="status"></p>
+
+        <div class="product-form-actions">
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="cancelProductForm">
+                Cancel
+            </button>
+
+            <button type="submit"
+                    class="btn btn-gold"
+                    id="saveProductBtn">
+                Save Product
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+    <div class="card management-card">
+
+        <div class="management-toolbar">
+            <h3>All Products</h3>
+
+            <button class="btn btn-gold"
+                    id="addProductBtn">
+                + Add Product
+            </button>
+        </div>
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dashboardProducts">
+                    <tr>
+                        <td colspan="3">
+                            Loading products...
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ====================================== -->
+<!-- INQUIRY MANAGEMENT                     -->
+<!-- ====================================== -->
+
+<section class="dashboard-section"
+         id="inquiriesSection" hidden>
+
+    <h2>Manage Inquiries</h2>
+
+    <p>View and manage customer requests.</p>
+
+    <div class="card management-card">
+
+        <div class="management-toolbar">
+
+            <h3>All Inquiries</h3>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="refreshInquiriesBtn">
+                Refresh
+            </button>
+
+        </div>
+
+        <div class="management-filters">
+
+            <div class="filter-field">
+
+                <label for="inquirySearch">
+                    Search Inquiries
+                </label>
+
+                <input type="search"
+                       id="inquirySearch"
+                       placeholder="Search customer or company">
+
+            </div>
+
+            <div class="filter-field">
+
+                <label for="inquiryStatusFilter">
+                    Filter by Status
+                </label>
+
+                <select id="inquiryStatusFilter">
+
+                    <option value="">All Statuses</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <p id="inquiriesStatus" role="status"></p>
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dashboardInquiries">
+
+                    <tr>
+                        <td colspan="6">
+                            Loading inquiries...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Inquiry Details -->
+
+    <div class="card management-card"
+         id="inquiryDetailsCard" hidden>
+
+        <div class="management-toolbar">
+
+            <h3>Inquiry Details</h3>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="closeInquiryDetails">
+                Close
+            </button>
+
+        </div>
+
+        <dl class="inquiry-details-grid"
+            id="inquiryDetails">
+        </dl>
+
+        <form id="inquiryUpdateForm">
+
+            <label for="inquiryNewStatus">
+                Update Status
+            </label>
+
+            <select id="inquiryNewStatus" required>
+
+                <option value="">Select status</option>
+
+            </select>
+
+            <p id="inquiryUpdateStatus"
+               role="status"></p>
+
+            <div class="product-form-actions">
+
+                <button type="submit"
+                        class="btn btn-gold"
+                        id="updateInquiryBtn"
+                        disabled>
+                    Update Status
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ====================================== -->
+<!-- PDF CATALOG MANAGEMENT                 -->
+<!-- ====================================== -->
+
+<section class="dashboard-section"
+         id="catalogsSection" hidden>
+
+    <h2>Manage PDF Catalogs</h2>
+
+    <p>Upload and manage downloadable catalogs.</p>
+
+    <!-- Catalog Form -->
+
+    <div class="card management-card"
+         id="catalogFormCard" hidden>
+
+        <div class="management-toolbar">
+
+            <h3>Upload New Catalog</h3>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="closeCatalogForm">
+                Close
+            </button>
+
+        </div>
+
+        <form id="dashboardCatalogForm">
+
+            <label for="catalogTitle">
+                Catalog Title
+            </label>
+
+            <input type="text"
+                   id="catalogTitle"
+                   placeholder="Enter catalog title"
+                   required>
+
+            <label for="catalogFile">
+                PDF File
+            </label>
+
+            <input type="file"
+                   id="catalogFile"
+                   accept=".pdf,application/pdf"
+                   required>
+
+            <p class="field-help">
+                Select a PDF document to upload.
+            </p>
+
+            <div id="catalogFilePreview"
+                 class="file-preview" hidden>
+
+                <strong id="catalogFileName"></strong>
+
+                <p id="catalogFileSize"></p>
+
+                <button type="button"
+                        class="btn btn-outline"
+                        id="removeCatalogFile">
+                    Remove File
+                </button>
+
+            </div>
+
+            <p id="catalogFormStatus"
+               role="status"></p>
+
+            <div class="product-form-actions">
+
+                <button type="button"
+                        class="btn btn-outline"
+                        id="cancelCatalogForm">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="btn btn-gold"
+                        id="saveCatalogBtn"
+                        disabled>
+                    Upload Catalog
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- Catalog Table -->
+
+    <div class="card management-card">
+
+        <div class="management-toolbar">
+
+            <h3>All PDF Catalogs</h3>
+
+            <button type="button"
+                    class="btn btn-gold"
+                    id="addCatalogBtn">
+                + Upload Catalog
+            </button>
+
+        </div>
+
+        <p id="catalogsStatus" role="status"></p>
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+                    <tr>
+                        <th>Catalog Title</th>
+                        <th>Upload Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dashboardCatalogs">
+
+                    <tr>
+                        <td colspan="3">
+                            Loading catalogs...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ====================================== -->
+<!-- OFFERS MANAGEMENT                      -->
+<!-- ====================================== -->
+
+<section class="dashboard-section"
+         id="offersSection" hidden>
+
+    <h2>Manage Offers</h2>
+
+    <p>Manage promotions and announcements.</p>
+
+    <!-- Offer Form -->
+
+    <div class="card management-card"
+         id="offerFormCard" hidden>
+
+        <div class="management-toolbar">
+
+            <h3 id="offerFormTitle">
+                Add New Offer
+            </h3>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="closeOfferForm">
+                Close
+            </button>
+
+        </div>
+
+        <form id="dashboardOfferForm">
+
+            <label for="offerTitle">
+                Offer Title
+            </label>
+
+            <input type="text"
+                   id="offerTitle"
+                   placeholder="Enter offer title"
+                   required>
+
+            <label for="offerBadge">
+                Offer Badge
+            </label>
+
+            <input type="text"
+                   id="offerBadge"
+                   value="ANNOUNCEMENT"
+                   placeholder="Example: SPECIAL OFFER"
+                   required>
+
+            <label for="offerDescription">
+                Description
+            </label>
+
+            <textarea id="offerDescription"
+                      rows="4"
+                      placeholder="Enter offer description">
+            </textarea>
+
+            <label for="offerEndDate">
+                Expiry Date
+            </label>
+
+            <input type="date"
+                   id="offerEndDate">
+
+            <p class="field-help">
+                Leave empty if there is no expiry date.
+            </p>
+
+            <label for="offerImage">
+                Offer Image
+            </label>
+
+            <input type="file"
+                   id="offerImage"
+                   accept="image/jpeg,image/png,image/webp">
+
+            <div id="offerImagePreview"
+                 class="image-preview" hidden>
+
+                <img id="previewOfferImage"
+                     alt="Offer image preview">
+
+                <button type="button"
+                        class="btn btn-outline"
+                        id="removeOfferImage">
+                    Remove Image
+                </button>
+
+            </div>
+
+            <p id="offerFormStatus"
+               role="status"></p>
+
+            <div class="product-form-actions">
+
+                <button type="button"
+                        class="btn btn-outline"
+                        id="cancelOfferForm">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="btn btn-gold"
+                        id="saveOfferBtn"
+                        disabled>
+                    Save Offer
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- Offers Table -->
+
+    <div class="card management-card">
+
+        <div class="management-toolbar">
+
+            <h3>All Offers</h3>
+
+            <button type="button"
+                    class="btn btn-gold"
+                    id="addOfferBtn">
+                + Add Offer
+            </button>
+
+        </div>
+
+        <p id="offersStatus" role="status"></p>
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+                    <tr>
+                        <th>Offer</th>
+                        <th>Badge</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dashboardOffers">
+
+                    <tr>
+                        <td colspan="5">
+                            Loading offers...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ====================================== -->
+<!-- LOGIN MANAGEMENT                       -->
+<!-- ====================================== -->
+
+<section class="dashboard-section"
+         id="loginsSection" hidden>
+
+    <h2>Manage Logins</h2>
+
+    <p>Manage Admin and Editor accounts.</p>
+
+    <div class="card management-card">
+
+        <h3>Current Account</h3>
+
+        <div class="account-details">
+
+            <p>
+                <strong>Login ID:</strong>
+                <span id="currentLoginId">—</span>
+            </p>
+
+            <p>
+                <strong>Role:</strong>
+                <span id="currentLoginRole">—</span>
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Create Login Form -->
+
+    <div class="card management-card"
+         id="loginFormCard" hidden>
+
+        <div class="management-toolbar">
+
+            <h3>Create New Login</h3>
+
+            <button type="button"
+                    class="btn btn-outline"
+                    id="closeLoginForm">
+                Close
+            </button>
+
+        </div>
+
+        <form id="dashboardCreateLoginForm"
+              autocomplete="off">
+
+            <label for="newLoginId">
+                Login ID
+            </label>
+
+            <input type="text"
+                   id="newLoginId"
+                   placeholder="Enter new Login ID"
+                   minlength="3"
+                   maxlength="30"
+                   pattern="[a-zA-Z0-9._\-]{3,30}"
+                   autocomplete="off"
+                   required>
+
+            <label for="newLoginPassword">
+                Password
+            </label>
+
+            <input type="password"
+                   id="newLoginPassword"
+                   placeholder="Enter a strong password"
+                   minlength="8"
+                   autocomplete="new-password"
+                   required>
+
+            <label for="confirmLoginPassword">
+                Confirm Password
+            </label>
+
+            <input type="password"
+                   id="confirmLoginPassword"
+                   placeholder="Confirm password"
+                   autocomplete="new-password"
+                   required>
+
+            <label for="newLoginRole">
+                Account Role
+            </label>
+
+            <select id="newLoginRole" required>
+
+                <option value="editor">Editor</option>
+
+                <option value="admin">Admin</option>
+
+            </select>
+
+            <p class="field-help">
+                Assign account permissions carefully.
+            </p>
+
+            <p id="createLoginStatus"
+               role="status"></p>
+
+            <div class="product-form-actions">
+
+                <button type="button"
+                        class="btn btn-outline"
+                        id="cancelLoginForm">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="btn btn-gold"
+                        id="saveLoginBtn"
+                        disabled>
+                    Create Login
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- Login Accounts Table -->
+
+    <div class="card management-card">
+
+        <div class="management-toolbar">
+
+            <h3>Authorized Accounts</h3>
+
+            <button type="button"
+                    class="btn btn-gold"
+                    id="addLoginBtn">
+                + Create Login
+            </button>
+
+        </div>
+
+        <p id="loginsStatus" role="status"></p>
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+                    <tr>
+                        <th>Login ID</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dashboardLogins">
+
+                    <tr>
+                        <td colspan="3">
+                            Loading accounts...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/supabase.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>
